@@ -6,6 +6,7 @@ package frc.robot.subsystems.Shooter;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -13,6 +14,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
   /** Creates a new ShooterSubsystem. */
   private TalonFX _upMotor;
   private TalonFX _downMotor;
+  private double targetSpeed = 0;
 
   public static ShooterSubsystem instance;
   public static ShooterSubsystem getInstance() {
@@ -22,10 +24,26 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
     return instance;
   }
 
+  public Command setShooterSpeed(double speed){
+    targetSpeed = speed;
+    return runOnce(() -> {_upMotor.set(speed);
+    _downMotor.set(speed);});
+  }
+
   public ShooterSubsystem() {
     _upMotor = new TalonFX(UPMOTOR_ID, Constants.CAN_BUS_NAME);
     _downMotor = new TalonFX(DOWNMOTOR_ID, Constants.CAN_BUS_NAME);
   }
+  
+public Command stopMotor(){
+  return runOnce(() -> {_upMotor.set(0);
+    _downMotor.set(0);});
+}
+
+public boolean isAtVelocity(){
+  return Math.abs(_upMotor.getVelocity().getValue()-targetSpeed)<MINIMUM_ERROR && Math.abs(_downMotor.getVelocity().getValue()-targetSpeed)<MINIMUM_ERROR;
+}
+
 
   @Override
   public void periodic() {
