@@ -12,8 +12,8 @@ import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase implements ShooterConstants {
   /** Creates a new ShooterSubsystem. */
-  private TalonFX up_Motor;
-  private TalonFX down_Motor;
+  private TalonFX _upMotor;
+  private TalonFX _downMotor;
   private double targetSpeed = 0;
 
   /** using a singleton */
@@ -28,31 +28,33 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** finding the motors mased on the id and can-bus name */
   public ShooterSubsystem() {
-    up_Motor = new TalonFX(UPMOTOR_ID, Constants.CAN_BUS_NAME);
-    down_Motor = new TalonFX(DOWNMOTOR_ID, Constants.CAN_BUS_NAME);
+    _upMotor = new TalonFX(UPMOTOR_ID, Constants.CAN_BUS_NAME);
+    _downMotor = new TalonFX(DOWNMOTOR_ID, Constants.CAN_BUS_NAME);
   }
 
   /** a command for setting a speed to the motors */
   public Command setShooterSpeed(double speed) {
     targetSpeed = speed;
     return runOnce(() -> {
-      up_Motor.set(speed);
-      down_Motor.set(speed);
+      _upMotor.set(speed);
+      _downMotor.set(speed);
     });
   }
 
   /** a command for stopping the motors */
   public Command stopMotor() {
     return runOnce(() -> {
-      up_Motor.stopMotor();;
-      down_Motor.stopMotor();;
+      _upMotor.stopMotor();
+      ;
+      _downMotor.stopMotor();
+      ;
     });
   }
 
   /** a command for checking if the motors are at the speed */
   public boolean isAtVelocity() {
-    return Math.abs(up_Motor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR
-        && Math.abs(down_Motor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR;
+    return Math.abs(_upMotor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR
+        && Math.abs(_downMotor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR;
   }
 
   @Override
