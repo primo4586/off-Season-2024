@@ -30,6 +30,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   private ShooterSubsystem() {
     up_Motor = new TalonFX(UP_MOTOR_ID, Constants.CAN_BUS_NAME);
     down_Motor = new TalonFX(DOWN_MOTOR_ID, Constants.CAN_BUS_NAME);
+    configs();
   }
 
   /** a command for setting a speed to the motors */
@@ -44,10 +45,8 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   /** a command for stopping the motors */
   public Command stopMotor() {
     return runOnce(() -> {
-      up_Motor.stopMotor();
-      ;
-      down_Motor.stopMotor();
-      ;
+      up_Motor.stopMotor();;
+      down_Motor.stopMotor();;
     });
   }
 
@@ -56,6 +55,8 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
     return Math.abs(up_Motor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR
         && Math.abs(down_Motor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR;
   }
+
+  private void configs(){}
 
   @Override
   public void periodic() {
