@@ -56,10 +56,11 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
         && Math.abs(down_Motor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR;
   }
 
-  private void configs(){}
-
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+  private void configs(){}
+
 }
