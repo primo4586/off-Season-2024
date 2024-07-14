@@ -24,13 +24,13 @@ public class intakeSubsystem extends SubsystemBase implements intakeConstants{
   }
   //im coping yair
   private intakeSubsystem() {
-    _motor = new TalonFX(_motor_ID, Constants.CAN_BUS_NAME);
-    _limitSwitch = new DigitalInput(_limitSwitch_ID, Constants.CAN_BUS_NAME);
+    _motor = new TalonFX(MOTOR_ID, Constants.CAN_BUS_NAME);
+    _limitSwitch = new DigitalInput(LIMITSWITCH_ID);
     configs();
   }
   //were setting the motors speed like yair
   public Boolean getSwitch(){
-    __limitSwitch.get().getAsBoolean();
+    return _limitSwitch.get();
   }
 
 
