@@ -4,10 +4,14 @@
 
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class intakeSubsystem extends SubsystemBase {
   /** Creates a new intakeSubsystem. */
+  private TalonFX _motor;
+  private DigitalSwitch _motor;
   public intakeSubsystem() {}
 
   @Override
