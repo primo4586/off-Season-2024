@@ -27,30 +27,31 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   /** Creates a new ClimbSubsystem. */
-  public ClimbSubsystem() {}
+  public ClimbSubsystem() {
+     // This method will be called once per scheduler run
+    m_motorLeft = new CANSparkMax(ClimbConstants.CLIMBING_MOTOR_LEFT_ID, MotorType.kBrushless);
+    m_motorRight = new CANSparkMax(ClimbConstants.CLIMBING_MOTOR_RIGHT_ID, MotorType.kBrushless);
+
+  }
 
   @Override
   public void periodic() {
     
-    // This method will be called once per scheduler run
-    m_motorLeft = new CANSparkMax(ClimbConstants.CLIMBING_MOTOR_LEFT_ID, MotorType.kBrushless);
-    m_motorRight = new CANSparkMax(ClimbConstants.CLIMBING_MOTOR_RIGHT_ID, MotorType.kBrushless);
-
-    m_motorRight.setInverted(false);
-    m_motorLeft.setInverted(true);
-
-
-    
   }
-  public Command setSameSpeedCommand(double speedMotorRight, double speedMotorLeft){
+  public Command setSpeedCommand(double speedMotorRight, double speedMotorLeft){
     return runOnce(() -> {m_motorLeft.set(speedMotorRight);
     m_motorRight.set(speedMotorRight);});
  
   }
 
-  public Command setDifferentSpeedCommand(double speedMotorLeft, double speedMotorRight ){
-    return runOnce(() -> {m_motorLeft.set(speedMotorLeft);
-    m_motorRight.set(speedMotorRight);});
+  public Command setSpeedCommand(DoubleSupplier speedMotorLeft, DoubleSupplier speedMotorRight ){
+    return runOnce(() -> {m_motorLeft.set(speedMotorLeft.getAsDouble());
+    m_motorRight.set(speedMotorRight.getAsDouble());});
   
+  }
+  private void configs(){
+    m_motorRight.setInverted(false);
+    m_motorLeft.setInverted(true);
+
   }
 }
