@@ -48,12 +48,13 @@ public class ClimbSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+
   }
 
   private void configs(){
     m_motorRight.setInverted(false);
     m_motorLeft.setInverted(true);
+
 
   }
 }
