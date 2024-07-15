@@ -9,6 +9,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
@@ -28,6 +30,39 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
     _limitSwitch = new DigitalInput(LIMIT_SWITCH_ID);
     configs();
 
+  }
+
+  /**
+   * returns the state of the switch
+   * 
+   */
+  public boolean getSwitchCommand(){
+    return _limitSwitch.get();
+  }
+
+  /**
+   * sets the speed to 0.5
+   * 
+   */
+  public Command setSpeedCommand(){
+    return runOnce(() -> _motor.set(SPEED));
+  }
+
+  /**
+   * Stops the motor
+   * 
+   */
+  public Command stopIntakeCommand(){
+    return runOnce(() -> _motor.stopMotor());
+  }
+
+  public Command coolectUntilNoteCommand(){
+    return startEnd(() -> setSpeedCommand(),() -> stopIntakeCommand()).until(() -> getSwitchCommand());
+  }
+
+  public Command feedShooterCommand(){
+    return runOnce(() -> _motor.set(FEED_INTAKE_SPEED)).andThen(Commands.waitSeconds(0.2)
+    .andThen(stopIntakeCommand()));
   }
 
   @Override
