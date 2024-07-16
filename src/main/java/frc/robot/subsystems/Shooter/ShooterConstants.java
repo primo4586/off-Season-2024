@@ -7,6 +7,16 @@ public interface ShooterConstants {
 
     double MINIMUM_ERROR = 5;
 
+    // upper motor constants
+    int UP_MOTOR_CURRENT_LIMIT = 40;
+    int UP_MOTOR_CURRENT_THREASHOLD = 50;
+    double UP_MOTOR_TIME_THREASHOLD = 0.1;
+
+    // lowwer motor constants
+    int DOWN_MOTOR_CURRENT_LIMIT = 40;
+    int DOWN_MOTOR_CURRENT_THREASHOLD = 50;
+    double DOWN_MOTOR_TIME_THREASHOLD = 0.1;
+ 
     // Motion Magic Values
     int MOTION_MAGIC_CRUISE_VELOCITY = 80;
     int MOTION_MAGIC_ACCELERATION = 160;

@@ -8,7 +8,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -21,8 +21,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   /** Creates a new ShooterSubsystem. */
   private TalonFX up_Motor;
   private TalonFX down_Motor;
-  private MotionMagicVelocityVoltage mm = new MotionMagicVelocityVoltage(0,MOTION_MAGIC_ACCELERATION,true,0.0,0,false,false,false);
-  private double targetSpeed = 0;
+  private static final MotionMagicVelocityTorqueCurrentFOC mm = new MotionMagicVelocityTorqueCurrentFOC(0,MOTION_MAGIC_ACCELERATION,true,0.0,0,false,false,false);
 
   // using a singleton
   private static ShooterSubsystem instance;
@@ -43,7 +42,6 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** a command for setting a speed to the motors */
   public Command setShooterSpeed(double speed){
-    targetSpeed = speed;
     return runOnce(() -> {up_Motor.setControl(mm.withVelocity(speed));
     down_Motor.setControl(mm.withVelocity(speed));});
   }
@@ -58,8 +56,8 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** a command for checking if the motors are at the speed */
   public boolean isAtVelocity() {
-    return Math.abs(up_Motor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR
-        && Math.abs(down_Motor.getVelocity().getValue() - targetSpeed) < MINIMUM_ERROR;
+    return Math.abs(up_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR
+        && Math.abs(down_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR;
   }
 
   
@@ -103,14 +101,14 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
         upConfigs.Feedback.SensorToMechanismRatio =  GEAR_RATIO;
         downConfigs.Feedback.SensorToMechanismRatio =  GEAR_RATIO;
 
-        upConfigs.CurrentLimits.SupplyCurrentLimit = 40;
-        upConfigs.CurrentLimits.SupplyCurrentThreshold = 50;
-        upConfigs.CurrentLimits.SupplyTimeThreshold = 0.1;
+        upConfigs.CurrentLimits.SupplyCurrentLimit = UP_MOTOR_CURRENT_LIMIT;
+        upConfigs.CurrentLimits.SupplyCurrentThreshold = UP_MOTOR_CURRENT_THREASHOLD;
+        upConfigs.CurrentLimits.SupplyTimeThreshold = UP_MOTOR_TIME_THREASHOLD;
         upConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        downConfigs.CurrentLimits.SupplyCurrentLimit = 40;
-        downConfigs.CurrentLimits.SupplyCurrentThreshold = 50;
-        downConfigs.CurrentLimits.SupplyTimeThreshold = 0.1;
+        downConfigs.CurrentLimits.SupplyCurrentLimit = DOWN_MOTOR_CURRENT_LIMIT;
+        downConfigs.CurrentLimits.SupplyCurrentThreshold = DOWN_MOTOR_CURRENT_THREASHOLD;
+        downConfigs.CurrentLimits.SupplyTimeThreshold = DOWN_MOTOR_TIME_THREASHOLD;
         downConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
 
         up_Motor.setNeutralMode(NeutralModeValue.Coast);
@@ -132,6 +130,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
             status = up_Motor.getConfigurator().apply(upConfigs);
             if (status.isOK())
                 break;
+            System.out.println("status of upper motor configuration is not okay");
         }
                 
   }
