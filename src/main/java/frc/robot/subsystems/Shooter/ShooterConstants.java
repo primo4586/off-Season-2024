@@ -1,8 +1,15 @@
 package frc.robot.subsystems.Shooter;
 public interface ShooterConstants {
-    int MOTOR_ID = 0;
-    int LIMIT_SWITCH_ID = 0;
-    int ARM_START_POSITION = 0;
+    // motor's id
+    int DOWN_MOTOR_ID = 0;
+    int UP_MOTOR_ID  = 0;
+
+    // magic motion
+    int MOTION_MAGIC_ACCELERATION = 160;
+
+    // motors
+    int CURRENT_LIMIT = 40;
+    int CURRENT_THREASHOULD = 50;
     
 } 
     
