@@ -9,7 +9,7 @@ public interface IntakeConstants {
     double PEAK_CURRENT = 40.0;
     NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
     InvertedValue INVERTED = InvertedValue.Clockwise_Positive; //check the correct direction
-    double SPEED = 0.5;
+    double COLLECT_CURRENT = 20;
     double FEED_INTAKE_SPEED = 0.7;
-
+    double FEED_WAIT_TIME = 0.2;
 }

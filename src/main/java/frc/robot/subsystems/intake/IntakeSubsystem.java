@@ -6,6 +6,7 @@ package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -16,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   private TalonFX _motor;
   private DigitalInput _limitSwitch;
+  private TorqueCurrentFOC currentFOC = new TorqueCurrentFOC(0);
+
   //singelton
   private static IntakeSubsystem instance;
   public static IntakeSubsystem getInstance(){
@@ -41,11 +44,15 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   }
 
   /**
-   * sets the speed to 0.5
+   * sets the current to 20 amp
    * 
    */
   public Command setSpeedCommand(){
-    return runOnce(() -> _motor.set(SPEED));
+    return runOnce(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)));
+  }
+
+  public Command setSpeedCommand(double speed){
+    return runOnce(() -> _motor.setControl(currentFOC.withOutput(speed)));
   }
 
   /**
@@ -61,9 +68,15 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   }
 
   public Command feedShooterCommand(){
-    return runOnce(() -> _motor.set(FEED_INTAKE_SPEED)).andThen(Commands.waitSeconds(0.2)
-    .andThen(stopIntakeCommand()));
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_SPEED)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME)
+    .andThen(stopIntakeCommand());
   }
+
+  public Command feedShooterCommand(double speed){
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(speed)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME)
+    .andThen(stopIntakeCommand());
+  }
+
 
   @Override
   public void periodic() {
