@@ -45,8 +45,8 @@ public interface ShooterConstants {
 
    // Interpolatio
     double SHOOT_BASE_SPEED = 50;
-    double SHOOT_STAGE_SPEED = 70;
-    double SHOOT_SPEED = 70;
+    double SHOOT_STAGE_SPEED = 60;
+    double SHOOT_SPEED = 60;
     double AMP_SPEED = 23;
 
 

@@ -63,7 +63,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   /** a command for shooting from base */
   public Command shootFromBase() {
     return runOnce(() -> {
-      setShooterSpeed(50);
+      setShooterSpeed(SHOOT_BASE_SPEED);
       ;
     });
   }
@@ -71,7 +71,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   /** a command for shooting from Far */
   public Command shootFromFar() {
     return runOnce(() -> {
-      setShooterSpeed(60);
+      setShooterSpeed(SHOOT_STAGE_SPEED);
       ;
     });
   }
