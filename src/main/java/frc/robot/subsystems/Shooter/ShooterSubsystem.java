@@ -54,6 +54,18 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
     });
   }
 
+  public Command shootFromBase(){
+    return runOnce(() -> {
+      setShooterSpeed(50);;
+    });
+  }
+
+  public Command shootFromFar(){
+    return runOnce(() -> {
+      setShooterSpeed(60);;
+    });
+  }
+
   /** a command for checking if the motors are at the speed */
   public boolean isAtVelocity() {
     return Math.abs(up_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR
