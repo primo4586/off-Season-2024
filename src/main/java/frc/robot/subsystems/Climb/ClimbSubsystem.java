@@ -7,6 +7,7 @@ package frc.robot.subsystems.Climb;
 import java.net.Socket;
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -44,6 +45,7 @@ public class ClimbSubsystem extends SubsystemBase {
   public Command setSpeedCommand(DoubleSupplier speedMotorLeft, DoubleSupplier speedMotorRight ){
     return run(() -> {m_motorLeft.set(speedMotorLeft.getAsDouble());
     m_motorRight.set(speedMotorRight.getAsDouble());});
+    
   }
 
   @Override
@@ -54,6 +56,13 @@ public class ClimbSubsystem extends SubsystemBase {
   private void configs(){
     m_motorRight.setInverted(false);
     m_motorLeft.setInverted(true);
+
+    m_motorRight.setSmartCurrentLimit(CURRENT_LIMIT);
+    m_motorLeft.setSmartCurrentLimit(CURRENT_LIMIT);
+
+    m_motorRight.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_motorLeft.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
 
 
   }

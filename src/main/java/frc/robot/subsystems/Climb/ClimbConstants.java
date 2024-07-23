@@ -8,6 +8,7 @@ package frc.robot.subsystems.Climb;
 public class ClimbConstants {
     public static final int CLIMBING_MOTOR_RIGHT_ID = 0;
     public static final int CLIMBING_MOTOR_LEFT_ID = 0;
+    public static final int CURRENT_LIMIT = 12;
     
 
 }
