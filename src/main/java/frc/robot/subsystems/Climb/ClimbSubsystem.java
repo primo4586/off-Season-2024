@@ -36,7 +36,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   }
     public Command setSpeedCommand(DoubleSupplier speedMotorRight){
-    return runOnce(() -> {m_motorLeft.set(speedMotorRight.getAsDouble());
+    return run(() -> {m_motorLeft.set(speedMotorRight.getAsDouble());
     m_motorRight.set(speedMotorRight.getAsDouble());});
  
   }
