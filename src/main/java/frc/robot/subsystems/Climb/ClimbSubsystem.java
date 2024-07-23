@@ -35,9 +35,9 @@ public class ClimbSubsystem extends SubsystemBase {
     m_motorRight = new CANSparkMax(ClimbConstants.CLIMBING_MOTOR_RIGHT_ID, MotorType.kBrushless);
 
   }
-    public Command setSpeedCommand(double speedMotorRight, double speedMotorLeft){
-    return runOnce(() -> {m_motorLeft.set(speedMotorRight);
-    m_motorRight.set(speedMotorRight);});
+    public Command setSpeedCommand(DoubleSupplier speedMotorRight){
+    return runOnce(() -> {m_motorLeft.set(speedMotorRight.getAsDouble());
+    m_motorRight.set(speedMotorRight.getAsDouble());});
  
   }
 
