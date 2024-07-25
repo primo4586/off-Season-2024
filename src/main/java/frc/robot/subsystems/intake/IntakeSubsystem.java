@@ -47,12 +47,12 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * sets the current to 20 amp
    * 
    */
-  public Command setSpeedCommand(){
+  public Command setCurrentCommand(){
     return runOnce(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)));
   }
 
-  public Command setSpeedCommand(double speed){
-    return runOnce(() -> _motor.setControl(currentFOC.withOutput(speed)));
+  public Command setCurrentCommand(double current){
+    return runOnce(() -> _motor.setControl(currentFOC.withOutput(current)));
   }
 
   /**
@@ -63,18 +63,24 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
     return runOnce(() -> _motor.stopMotor());
   }
 
+  /**
+   * sets the current to 20 amp until note is collected
+   * 
+   */
   public Command coolectUntilNoteCommand(){
-    return startEnd(() -> setSpeedCommand(),() -> stopIntakeCommand()).until(() -> getSwitchCommand());
+    return startEnd(() -> setCurrentCommand(),() -> stopIntakeCommand()).until(() -> getSwitchCommand());
   }
 
+  /**
+   * feeds the shooter
+   * 
+  */
   public Command feedShooterCommand(){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_SPEED)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME)
-    .andThen(stopIntakeCommand());
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME);
   }
 
-  public Command feedShooterCommand(double speed){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(speed)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME)
-    .andThen(stopIntakeCommand());
+  public Command feedShooterCommand(double current){
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(current)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME);
   }
 
 
