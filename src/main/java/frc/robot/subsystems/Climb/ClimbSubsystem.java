@@ -15,7 +15,7 @@ import edu.wpi.first.networktables.PubSub;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ClimbSubsystem extends SubsystemBase {
+public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
   private CANSparkMax m_motorRight;
   private CANSparkMax m_motorLeft;
 
