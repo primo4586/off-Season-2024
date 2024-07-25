@@ -57,8 +57,8 @@ public class ClimbSubsystem extends SubsystemBase {
     m_motorRight.setInverted(false);
     m_motorLeft.setInverted(true);
 
-    m_motorRight.setSmartCurrentLimit(CURRENT_LIMIT);
-    m_motorLeft.setSmartCurrentLimit(CURRENT_LIMIT);
+    m_motorRight.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
+    m_motorLeft.setSmartCurrentLimit(ClimbConstants.CURRENT_LIMIT);
 
     m_motorRight.setIdleMode(CANSparkMax.IdleMode.kBrake);
     m_motorLeft.setIdleMode(CANSparkMax.IdleMode.kBrake);
