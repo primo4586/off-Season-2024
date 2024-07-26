@@ -6,6 +6,7 @@ package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -18,6 +19,7 @@ public class intakeSubsystem extends SubsystemBase implements intakeConstants {
   /** Creates a new intakeSubsystem. */
   private TalonFX _motor;
   private DigitalInput _limitSwitch;
+  private TorqueCurrentFOC currentFOC;
 
   private static intakeSubsystem instance;
 
@@ -32,6 +34,7 @@ public class intakeSubsystem extends SubsystemBase implements intakeConstants {
   private intakeSubsystem() {
     _motor = new TalonFX(MOTOR_ID, Constants.CAN_BUS_NAME);
     _limitSwitch = new DigitalInput(LIMITSWITCH_ID);
+    currentFOC = new TorqueCurrentFOC(0);
     configs();
   }
 
