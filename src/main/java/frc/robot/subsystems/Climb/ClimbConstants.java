@@ -8,6 +8,6 @@ public interface ClimbConstants {
     //TODO: motors id
     int CLIMBING_MOTOR_RIGHT_ID = 0;
     int CLIMBING_MOTOR_LEFT_ID = 0;
-    int CURRENT_LIMIT = 12;
+    int CURRENT_LIMIT = 40;
     
 }

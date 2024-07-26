@@ -29,20 +29,33 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
   private ClimbSubsystem() {
     configs();
 
-     // This method will be called once per scheduler run
-     //create new m_motorLeft,m_motorRight
+     /*
+     create new m_motorLeft,m_motorRight
+     *
+     * @param CLIMBING_MOTOR_LEFT_ID : id of the left motor
+     * @param CLIMBING_MOTOR_RIGHT_ID : id of right motor
+     * 
+     * */
     m_motorLeft = new CANSparkMax(CLIMBING_MOTOR_LEFT_ID, MotorType.kBrushless);
     m_motorRight = new CANSparkMax(CLIMBING_MOTOR_RIGHT_ID, MotorType.kBrushless);
 
   }
-  //command - set the same speed to both motors
+  /*
+   * command - set the same speed to both motors
+   * @param speedMotorRight.getAsDouble() : the speed to set to motor 
+   */
     public Command setSpeedCommand(DoubleSupplier speedMotorRight){
     return run(() -> {m_motorLeft.set(speedMotorRight.getAsDouble());
     m_motorRight.set(speedMotorRight.getAsDouble());});
  
   }
+ 
 
-  //command - set different speed to motors
+  /*
+   * command - set different speed to motors
+   * @param speedMotorLeft.getAsDouble() set this speed to motor left
+   * @param speedMotorRight.getAsDouble() set this speed to motor right
+   */
   public Command setSpeedCommand(DoubleSupplier speedMotorLeft, DoubleSupplier speedMotorRight ){
     return run(() -> {m_motorLeft.set(speedMotorLeft.getAsDouble());
     m_motorRight.set(speedMotorRight.getAsDouble());});
