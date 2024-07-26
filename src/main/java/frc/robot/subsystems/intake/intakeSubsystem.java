@@ -39,11 +39,8 @@ public class intakeSubsystem extends SubsystemBase implements intakeConstants {
   }
 
   /** setting the motors current */
-  public Command setCurrentCommand(Double current) {
-    return runOnce(() -> {
-      _motor.set(current);
-      ;
-    });
+  public Command setCurrentCommand(double current) {
+    return runOnce(() -> _motor.setControl(currentFOC.withOutput(current)));
   }
 
   /** running the intake motor until a note is detected */
