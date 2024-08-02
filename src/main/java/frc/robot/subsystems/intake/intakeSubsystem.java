@@ -35,7 +35,7 @@ public class intakeSubsystem extends SubsystemBase implements intakeConstants {
     configs();
   }
 
-  /** setting the motors current */
+  /** setting the motors speed */
   public Command setCurrentCommand(Double current) {
     return runOnce(() -> {
       _motor.set(current);
