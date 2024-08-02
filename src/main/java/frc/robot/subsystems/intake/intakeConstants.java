@@ -8,9 +8,8 @@ public interface intakeConstants {
     int LIMITSWITCH_ID = 0; //TODO: find id
 
     //motor constants
-    double MOTOR_CURRENT=0.5; //TODO: find current
-    double FEED_INTAKE_CURRENT=0.3; //TODO: find speed
-    double FEED_WAIT_TIME=10; //TODO: find time
+    double MOTOR_CURRENT=0.5; //TODO: find CURRENT
+    double FEED_INTAKE_CURRENT=0.3; //TODO: find SPEED
 
     // configs constants
     double CURRENT_LIMIT = 40;
