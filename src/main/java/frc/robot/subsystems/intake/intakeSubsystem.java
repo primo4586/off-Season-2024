@@ -56,8 +56,10 @@ public class intakeSubsystem extends SubsystemBase implements intakeConstants {
 
   /** feeding the note to the Shooter */
   public Command feedShooterCommand() {
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT)), () -> stopMotorCommand())
-        .withTimeout(FEED_WAIT_TIME);
+    return runOnce(() -> {
+      _motor.set(FEED_SPEED);
+      ;
+    });
   }
 
   /** stopping the motor */

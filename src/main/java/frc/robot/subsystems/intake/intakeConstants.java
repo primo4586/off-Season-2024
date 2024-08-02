@@ -9,7 +9,7 @@ public interface intakeConstants {
 
     //motor constants
     double MOTOR_CURRENT=0.5; //TODO: find CURRENT
-    double FEED_INTAKE_CURRENT=0.3; //TODO: find SPEED
+    double FEED_SPEED=0.3; //TODO: find SPEED
 
     // configs constants
     double CURRENT_LIMIT = 40;
