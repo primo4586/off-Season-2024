@@ -10,21 +10,17 @@ import frc.robot.subsystems.shooterArm.ShooterArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class CommandGroupFactory {
-    private IntakeSubsystem intake = IntakeSubsystem.getInstance();
-    private ClimbSubsystem climb = ClimbSubsystem.getInstance();
-    private ShooterSubsystem shooter = ShooterSubsystem.getInstance();
-    private ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
+    private static final IntakeSubsystem intake = IntakeSubsystem.getInstance();
+    private static final ClimbSubsystem climb = ClimbSubsystem.getInstance();
+    private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
+    private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
 
     public static Command ShootFromBase(){
-        return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)// one rio scyle
-        .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady))
-        .andThen(() -> intake.feedShooterCommand), () -> shooter.shootFromBase())
-        /*return new ParallelDeadlineGroup(
-            Commands.waitSeconds(0.02).andThen(Commands.waitUntil(() -> (shooterArm.isArmReady()
-            && (shooter.isAtVelocity())).andThen(intake.feedShooterCommand())), 
-        shooter.shootFromBase(),shooterArm.moveArmToBase());
-        */
-        };
+        return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)// waits one rio scyle
+        .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())
+        .andThen(() -> intake.feedShooterCommand())), shooterArm.moveArmToBase(),shooter.shootFromBase());
+    
+        }
     }
 
 //Commands.waitUntil(() -> shooter.isAtVelocity())).andThen(() -> shooter.shootFromBase().andThen(() -> intake.feedShooterCommand())));
