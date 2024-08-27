@@ -54,7 +54,7 @@ import frc.robot.Constants;
  
    /**
     * Gets the arm position
-    * @return The posirion in degrees
+    * @return The position in degrees
     */
    public double getArmPose(){
      return m_shooterArmMotor.getPosition().getValue();
@@ -131,6 +131,10 @@ import frc.robot.Constants;
  
    }
    
+   public Command moveArmToBase(){
+     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
+ 
+   }
    
  
    @Override
