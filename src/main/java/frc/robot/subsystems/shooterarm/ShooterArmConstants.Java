@@ -1,8 +1,8 @@
-package frc.robot.subsystem.ShooterArm;
+package frc.robot.subsystems.shooterArm;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 
-import frc.robot.util.exterpolation.ExterpolationMap;
 
 public interface ShooterArmConstants {
     //Technical Constants
@@ -40,5 +40,6 @@ public interface ShooterArmConstants {
     // Condition Constants
     double MINIMUM_ERROR = 1; //TODO find value
     double RESET_SPEED = -0.1; //TODO find value
+    double BASE_ANGLE = 0; //TODO find value
 
 }
