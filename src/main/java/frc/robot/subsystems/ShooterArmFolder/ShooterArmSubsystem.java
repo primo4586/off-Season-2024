@@ -1,4 +1,5 @@
-package frc.robot.subsystems.shooterArm;
+package frc.robot.subsystems.ShooterArmFolder;
+
 /**
  * This subsystem is resposible for the "line up shot"
  * @arthur Eilon.h
