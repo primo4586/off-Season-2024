@@ -48,6 +48,8 @@ public interface ShooterConstants {
     double SHOOT_STAGE_SPEED = 70;
     double SHOOT_SPEED = 70;
     double AMP_SPEED = 23;
-
+    
+    // Speed Values
+    double BASE_SPEED = 0; //TODO: find value 
 
 }
