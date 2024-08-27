@@ -40,4 +40,6 @@ public interface ShooterArmConstants {
     double MINIMUM_ERROR = 1; //TODO find value
     double RESET_SPEED = -0.1; //TODO find value
 
+    double BASE_ANGLE = 0; //TODO: find value
+
 }
