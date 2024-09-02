@@ -1,5 +1,8 @@
 package frc.robot.subsystems.ShooterArmFolder;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.SignalLogger;
+
 /**
  * This subsystem is resposible for the "line up shot"
  * @arthur Eilon.h
@@ -7,29 +10,62 @@ package frc.robot.subsystems.ShooterArmFolder;
  */
 
  import com.ctre.phoenix6.StatusCode;
- import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
  import com.ctre.phoenix6.configs.TalonFXConfiguration;
  import com.ctre.phoenix6.configs.TalonFXConfigurator;
  import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
- import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
  import com.ctre.phoenix6.signals.ForwardLimitValue;
  import com.ctre.phoenix6.signals.InvertedValue;
  import com.ctre.phoenix6.signals.NeutralModeValue;
- import edu.wpi.first.wpilibj.DigitalInput;
- import edu.wpi.first.wpilibj.RobotState;
+
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.RobotState;
  import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  import edu.wpi.first.wpilibj2.command.Command;
  import edu.wpi.first.wpilibj2.command.Commands;
  import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import static edu.wpi.first.units.MutableMeasure.mutable;
  
  public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmConstants{
    private TalonFX m_shooterArmMotor;
+     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+
+  // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+
    private final MotionMagicExpoTorqueCurrentFOC mm = new MotionMagicExpoTorqueCurrentFOC(0);
    private final DigitalInput m_limitSwitch = new DigitalInput(SWITCH_ID);
- 
+       private final VoltageOut m_sysIdControl = new VoltageOut(0);
+
+    private final SysIdRoutine m_sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,         // Use default ramp rate (1 V/s)
+                Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
+                null,          // Use default timeout (10 s)
+                                       // Log state with Phoenix SignalLogger class
+                (state)->SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (Measure<Voltage> volts)-> m_shooterArmMotor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
+                null,
+                this));
    // singelton
    private static ShooterArmSubsystem instance;
+
    public static ShooterArmSubsystem getInstance(){
      if (instance == null)
        instance = new ShooterArmSubsystem();
@@ -40,8 +76,10 @@ import frc.robot.Constants;
     * Constructor
     */
    private ShooterArmSubsystem() {
+      
      m_shooterArmMotor = new TalonFX(SHOOTER_ARM_ID, Constants.CAN_BUS_NAME); // crearts new motor
      configs();
+     sysidConfigs();
    }
  
     /**
@@ -54,7 +92,7 @@ import frc.robot.Constants;
  
    /**
     * Gets the arm position
-    * @return The position in degrees
+    * @return The posirion in degrees
     */
    public double getArmPose(){
      return m_shooterArmMotor.getPosition().getValue();
@@ -116,7 +154,6 @@ import frc.robot.Constants;
     * @return The command
     */
    public Command prepareHomeCommand() {
-    System.out.println("hello shooterArm");
      return !getReverseLimit()
          ? Commands.none()
          : (runOnce(() -> m_shooterArmMotor.set(RESET_SPEED)).andThen(Commands.waitUntil(() -> !getReverseLimit())))
@@ -131,11 +168,12 @@ import frc.robot.Constants;
      return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree)));
  
    }
-   
-   public Command moveArmToBase(){
-     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
- 
-   }
+   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+}
+public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
+}  
    
  
    @Override
@@ -187,4 +225,19 @@ import frc.robot.Constants;
      if (!statusCode.isOK())
        System.out.println("Shooter Arm could not apply config, error code:" + statusCode.toString());
    }
+      /**
+      * settings for sysid
+      */
+      private void sysidConfigs(){
+        BaseStatusSignal.setUpdateFrequencyForAll(250,
+        m_shooterArmMotor.getPosition(),
+        m_shooterArmMotor.getVelocity(),
+        m_shooterArmMotor.getMotorVoltage());
+
+        /* Optimize out the other signals, since they're not useful for SysId */
+        m_shooterArmMotor.optimizeBusUtilization();
+
+        /* Start the signal logger */
+        SignalLogger.start();
+      }
  }
