@@ -9,6 +9,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -23,6 +24,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   private TalonFX down_Motor;
   private static final MotionMagicVelocityTorqueCurrentFOC mm = new MotionMagicVelocityTorqueCurrentFOC(0,
       MOTION_MAGIC_ACCELERATION, true, 0.0, 0, false, false, false);
+  private TorqueCurrentFOC currentFOC = new TorqueCurrentFOC(0);
 
   // using a singleton
   private static ShooterSubsystem instance;
@@ -40,6 +42,13 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
     up_Motor = new TalonFX(UP_MOTOR_ID, Constants.CAN_BUS_NAME);
     down_Motor = new TalonFX(DOWN_MOTOR_ID, Constants.CAN_BUS_NAME);
     configs();
+  }
+
+  public Command setCurrentYeetCommand(){
+    return runOnce(() -> {
+      up_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));
+      down_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));});
+
   }
 
   /** a command for setting a speed to the motors */
