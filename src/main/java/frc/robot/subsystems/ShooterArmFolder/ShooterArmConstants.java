@@ -2,10 +2,11 @@ package frc.robot.subsystems.ShooterArmFolder;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 
+
 public interface ShooterArmConstants {
     //Technical Constants
-    int SHOOTER_ARM_ID = 0; //TODO find value
-    int SWITCH_ID = 0; //TODO find value
+    int SHOOTER_ARM_ID = 31;
+    int SWITCH_ID = 6;
     int ENCODER_COUNTS_PER_REVOLUTION = 1;
     double GEAR_RATIO = 100 / 22 * 100;
     double TICKS_PER_DEGREE = ENCODER_COUNTS_PER_REVOLUTION * GEAR_RATIO / 360.0;
@@ -15,14 +16,14 @@ public interface ShooterArmConstants {
     double MM_ACCELERATION = 300;
     double MM_JERK = 1600;
 
-    //TODO find value
+    //TODO find values
     double KP = 0;
     double KD = 0;
     double KS  = 0;
     double KA = 0;
     double KV = 0;
 
-    double PEAK_CURRENT = 0; //TODO find value
+    double PEAK_CURRENT = 50; //TODO find value
 
     double FOWORD_LIMIT = 80; //TODO find value
     double BACKWARD_LIMIT = -1;//TODO find value
