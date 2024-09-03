@@ -6,6 +6,7 @@ public interface ShooterConstants {
     int DOWN_MOTOR_ID = 33; 
 
     double MINIMUM_ERROR = 5;
+    double YEET_CURRENT = 8; //find value
 
     // upper motor constants
     int UP_MOTOR_CURRENT_LIMIT = 40;
