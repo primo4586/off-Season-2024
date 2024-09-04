@@ -15,16 +15,18 @@ public class CommandGroupFactory {
     private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
     private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
 
-    public static Command ShootFromBase(){
+    public static Command shootFromBase(){
         return new ParallelDeadlineGroup(Commands.waitSeconds(1.5)// waits one rio scyle
         .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())
         .andThen(() -> intake.feedShooterCommand())), shooterArm.moveArmToBase(),shooter.shootFromBase());
     
         }
     
-    public static Command Yeet(){
-        return new ParallelDeadlineGroup(Commands.waitSeconds(0.2).andThen(() -> intake.feedShooterCommand()),
+    public static Command yeet(){
+        System.out.println("hello");
+        return new ParallelDeadlineGroup(Commands.waitSeconds(2).andThen(() -> intake.feedShooterCommand()),
          shooter.setCurrentYeetCommand());
+
     }
     }
 

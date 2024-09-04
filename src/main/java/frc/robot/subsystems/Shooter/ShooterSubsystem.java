@@ -45,10 +45,10 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   }
 
   public Command setCurrentYeetCommand(){
+    System.out.println("yeet");
     return runOnce(() -> {
       up_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));
       down_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));});
-
   }
 
   /** a command for setting a speed to the motors */
@@ -80,8 +80,8 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   /** a command for shooting from Far */
   public Command shootFromFar() {
     return runOnce(() -> {
-      setShooterSpeed(60);
-      ;
+      up_Motor.setControl(mm.withVelocity(BASE_SPEED));
+      down_Motor.setControl(mm.withVelocity(BASE_SPEED));
     });
   }
 
