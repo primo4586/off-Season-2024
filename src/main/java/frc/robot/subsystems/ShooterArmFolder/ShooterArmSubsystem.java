@@ -166,7 +166,10 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     */
    public Command moveArmTo(double degree){
      return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree)));
- 
+   }
+   
+  public Command moveArmToBase() {
+    return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
    }
    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.quasistatic(direction);
@@ -241,9 +244,4 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         /* Start the signal logger */
         SignalLogger.start();
       }
-
-    public Command moveArmToBase() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'moveArmToBase'");
-    }
  }

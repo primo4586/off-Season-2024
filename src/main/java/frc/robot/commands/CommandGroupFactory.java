@@ -7,7 +7,10 @@ import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class CommandGroupFactory {
     private static final IntakeSubsystem intake = IntakeSubsystem.getInstance();
@@ -15,21 +18,21 @@ public class CommandGroupFactory {
     private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
     private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
 
-    public static Command shootFromBase(){
+    public static Command shootFromBase(){ //TODO: test it 
         return new ParallelDeadlineGroup(Commands.waitSeconds(1.5)// waits one rio scyle
         .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())
-        .andThen(() -> intake.feedShooterCommand())), shooterArm.moveArmToBase(),shooter.shootFromBase());
+        .andThen(intake.feedShooterCommand())), shooterArm.moveArmToBase(),shooter.shootFromBase());
     
 
         }
     
-    public static Command yeet(){
-        System.out.println("this must work");
-        return new ParallelDeadlineGroup(Commands.waitSeconds(1.5).andThen(() -> intake.feedShooterCommand()),
+    public static Command yeet(){ // TODO: make it work
+        return new ParallelDeadlineGroup(Commands.waitSeconds(1.5).andThen(intake.feedShooterCommand()),
          shooter.setCurrentYeetCommand());
+    }
+    //TODO: add all swerve vision and interpolation commands
+    }
 
-    }
-    }
 
 
 
