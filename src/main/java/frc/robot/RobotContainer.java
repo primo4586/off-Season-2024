@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
 
@@ -35,11 +36,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //simple commands
+    /* 
     System.out.println("hello world");
     m_testerController.b().onTrue(intake.feedShooterCommand());
     m_testerController.a().onTrue(CommandGroupFactory.yeet());
     m_testerController.y().onTrue(intake.coolectUntilNoteCommand());
     m_driverController.x().onTrue(CommandGroupFactory.shootFromBase());
+    */
+    m_testerController.rightBumper().whileTrue(shooterArm.sysIdDynamic(SysIdRoutine.Direction.kForward));
+
     
   }
 
@@ -51,6 +56,7 @@ public class RobotContainer {
    * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
+   * 
    */
   private void configureBindings() {
     
