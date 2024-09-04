@@ -32,18 +32,9 @@ public class RobotContainer {
   private  final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
   private final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
       
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    //simple commands
-    /* 
-    System.out.println("hello world");
-    m_testerController.b().onTrue(intake.feedShooterCommand());
-    m_testerController.a().onTrue(CommandGroupFactory.yeet());
-    m_testerController.y().onTrue(intake.coolectUntilNoteCommand());
-    m_driverController.x().onTrue(CommandGroupFactory.shootFromBase());
-    */
-    m_testerController.rightBumper().whileTrue(shooterArm.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    configureBindings();
+  
 
     
   }
@@ -59,6 +50,15 @@ public class RobotContainer {
    * 
    */
   private void configureBindings() {
+    // basic test commands
+    m_testerController.a().onTrue(intake.coolectUntilNoteCommand());
+    m_testerController.y().onTrue(intake.setCurrentCommand());
+    //m_testerController.x().whileTrue(shooter.setShooterSpeed(0)); THERE IS NO PID YET DO NOT TRY 
+    m_testerController.b().onTrue(shooterArm.prepareHomeCommand()); //TODO: test if it works 
+
+
+    m_testerController.rightTrigger().onTrue(CommandGroupFactory.yeet());
+    m_testerController.rightBumper().onTrue(CommandGroupFactory.shootFromBase()); 
     
   }
 
