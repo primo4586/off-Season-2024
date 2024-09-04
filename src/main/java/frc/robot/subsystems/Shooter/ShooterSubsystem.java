@@ -48,14 +48,11 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   }
 
   public Command setCurrentYeetCommand(){
-    System.out.println("shooter");
-    return runOnce(() -> up_Motor.set(0.2));
-    /* 
+
     System.out.println("yeet");
     return runOnce(() -> {
       up_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));
       down_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));});
-      */ 
   }
 
   /** a command for setting a speed to the motors */
@@ -99,7 +96,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   @Override
   public void periodic() {
-    SmartDashboard.setDefaultNumber("shooter", up_Motor.getDeviceID());
+    SmartDashboard.setDefaultNumber("shooter", up_Motor.getSupplyCurrent().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 

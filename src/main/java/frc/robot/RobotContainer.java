@@ -36,10 +36,10 @@ public class RobotContainer {
   public RobotContainer() {
     //simple commands
     System.out.println("hello world");
-    m_testerController.b().onTrue(intake.coolectUntilNoteCommand());
-    m_testerController.x().whileTrue(CommandGroupFactory.yeet());
-    m_testerController.y().whileTrue(intake.setCurrentCommand());
-    m_driverController.a().onTrue(shooter.setCurrentYeetCommand());
+    m_testerController.b().onTrue(intake.feedShooterCommand());
+    m_testerController.a().onTrue(CommandGroupFactory.yeet());
+    m_testerController.y().onTrue(intake.coolectUntilNoteCommand());
+    m_driverController.x().onTrue(CommandGroupFactory.shootFromBase());
     
   }
 
