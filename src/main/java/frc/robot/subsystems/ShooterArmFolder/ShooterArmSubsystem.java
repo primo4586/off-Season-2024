@@ -116,6 +116,7 @@ import frc.robot.Constants;
     * @return The command
     */
    public Command prepareHomeCommand() {
+    System.out.println("hello shooterArm");
      return !getReverseLimit()
          ? Commands.none()
          : (runOnce(() -> m_shooterArmMotor.set(RESET_SPEED)).andThen(Commands.waitUntil(() -> !getReverseLimit())))

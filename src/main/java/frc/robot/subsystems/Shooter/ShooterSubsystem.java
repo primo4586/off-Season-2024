@@ -14,6 +14,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -42,13 +43,19 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
     up_Motor = new TalonFX(UP_MOTOR_ID, Constants.CAN_BUS_NAME);
     down_Motor = new TalonFX(DOWN_MOTOR_ID, Constants.CAN_BUS_NAME);
     configs();
+    System.out.println("fuck you");
+
   }
 
   public Command setCurrentYeetCommand(){
+    System.out.println("shooter");
+    return runOnce(() -> up_Motor.set(0.2));
+    /* 
     System.out.println("yeet");
     return runOnce(() -> {
       up_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));
       down_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));});
+      */ 
   }
 
   /** a command for setting a speed to the motors */
@@ -58,30 +65,29 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
       down_Motor.setControl(mm.withVelocity(speed));
     });
   }
+  
 
   /** a command for stopping the motors */
   public Command stopMotor() {
     return runOnce(() -> {
       up_Motor.stopMotor();
-      ;
       down_Motor.stopMotor();
-      ;
     });
   }
 
   /** a command for shooting from base */
   public Command shootFromBase() {
     return runOnce(() -> {
-      setShooterSpeed(BASE_SPEED);
-      ;
+      up_Motor.setControl(mm.withVelocity(BASE_SPEED));
+      down_Motor.setControl(mm.withVelocity(BASE_SPEED));
     });
   }
 
   /** a command for shooting from Far */
   public Command shootFromFar() {
     return runOnce(() -> {
-      up_Motor.setControl(mm.withVelocity(BASE_SPEED));
-      down_Motor.setControl(mm.withVelocity(BASE_SPEED));
+      up_Motor.setControl(mm.withVelocity(SHOOT_SPEED));
+      down_Motor.setControl(mm.withVelocity(SHOOT_SPEED));
     });
   }
 
@@ -93,6 +99,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   @Override
   public void periodic() {
+    SmartDashboard.setDefaultNumber("shooter", up_Motor.getDeviceID());
     // This method will be called once per scheduler run
   }
 

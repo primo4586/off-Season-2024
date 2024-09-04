@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Shooter.ShooterSubsystem;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -19,13 +20,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    System.out.println("hello");
-    SmartDashboard.putBoolean("intake",false);
     m_robotContainer = new RobotContainer();
   }
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putBoolean("intake",false);
 
     /**
      * This example of adding Limelight is very simple and may not be sufficient for on-field use.
@@ -55,7 +55,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    
+  }
 
   @Override
   public void autonomousExit() {}
