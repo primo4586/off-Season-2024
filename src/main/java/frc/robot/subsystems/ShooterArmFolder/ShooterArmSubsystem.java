@@ -172,6 +172,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     return m_sysIdRoutine.quasistatic(direction);
 }
 public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+  System.out.println("hallo");
     return m_sysIdRoutine.dynamic(direction);
 }  
    
@@ -240,4 +241,9 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         /* Start the signal logger */
         SignalLogger.start();
       }
+
+    public Command moveArmToBase() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'moveArmToBase'");
+    }
  }
