@@ -10,6 +10,6 @@ public interface IntakeConstants {
     NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
     InvertedValue INVERTED = InvertedValue.CounterClockwise_Positive; //check the correct direction
     double COLLECT_CURRENT = 20; //TODO: find Value
-    double FEED_INTAKE_CURRENT = 0.7; //TODO: find Value
-    double FEED_WAIT_TIME = 0.2; //TODO: find Value
+    double FEED_INTAKE_CURRENT = 30; //TODO: find Value
+    double FEED_WAIT_TIME = 0.5; //TODO: find Value
 }

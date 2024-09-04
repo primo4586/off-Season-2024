@@ -20,11 +20,12 @@ public class CommandGroupFactory {
         .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())
         .andThen(() -> intake.feedShooterCommand())), shooterArm.moveArmToBase(),shooter.shootFromBase());
     
+
         }
     
     public static Command yeet(){
         System.out.println("this must work");
-        return new ParallelDeadlineGroup(Commands.waitSeconds(2).andThen(() -> intake.feedShooterCommand()),
+        return new ParallelDeadlineGroup(Commands.waitSeconds(1.5).andThen(() -> intake.feedShooterCommand()),
          shooter.setCurrentYeetCommand());
 
     }
