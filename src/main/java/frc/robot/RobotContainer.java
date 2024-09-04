@@ -10,6 +10,7 @@ import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
+import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,18 +27,19 @@ public class RobotContainer {
   private final CommandXboxController m_testerController =
     new CommandXboxController(2);
 
-  private  final IntakeSubsystem intake = IntakeSubsystem.getInstance();
+  private final IntakeSubsystem intake = IntakeSubsystem.getInstance();
   private  final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
+  private final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
       
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //simple commands
     System.out.println("hello world");
-    m_testerController.a().onTrue(intake.coolectUntilNoteCommand());
-    m_testerController.x().onTrue(CommandGroupFactory.yeet());
+    m_testerController.b().onTrue(intake.coolectUntilNoteCommand());
+    m_testerController.x().whileTrue(CommandGroupFactory.yeet());
     m_testerController.y().whileTrue(intake.setCurrentCommand());
-    m_driverController.rightBumper().whileTrue(shooter.setCurrentYeetCommand());
+    m_driverController.a().onTrue(shooter.setCurrentYeetCommand());
     
   }
 

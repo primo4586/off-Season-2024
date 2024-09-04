@@ -23,7 +23,7 @@ public class CommandGroupFactory {
         }
     
     public static Command yeet(){
-        System.out.println("hello");
+        System.out.println("this must work");
         return new ParallelDeadlineGroup(Commands.waitSeconds(2).andThen(() -> intake.feedShooterCommand()),
          shooter.setCurrentYeetCommand());
 
