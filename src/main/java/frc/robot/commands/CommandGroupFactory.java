@@ -16,7 +16,7 @@ public class CommandGroupFactory {
     private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
 
     public static Command ShootFromBase(){
-        return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)// waits one rio scyle
+        return new ParallelDeadlineGroup(Commands.waitSeconds(1.5)// waits one rio scyle
         .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())
         .andThen(() -> intake.feedShooterCommand())), shooterArm.moveArmToBase(),shooter.shootFromBase());
     

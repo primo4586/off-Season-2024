@@ -27,7 +27,6 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
 
   /** Creates a new ClimbSubsystem. */
   private ClimbSubsystem() {
-    configs();
 
      /*
      create new m_motorLeft,m_motorRight
@@ -38,6 +37,7 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
      * */
     m_motorLeft = new CANSparkMax(CLIMBING_MOTOR_LEFT_ID, MotorType.kBrushless);
     m_motorRight = new CANSparkMax(CLIMBING_MOTOR_RIGHT_ID, MotorType.kBrushless);
+    configs();
 
   }
   /*
