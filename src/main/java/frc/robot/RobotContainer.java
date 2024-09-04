@@ -26,16 +26,18 @@ public class RobotContainer {
   private final CommandXboxController m_testerController =
     new CommandXboxController(2);
 
-  private static final IntakeSubsystem intake = IntakeSubsystem.getInstance();
-  private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
+  private  final IntakeSubsystem intake = IntakeSubsystem.getInstance();
+  private  final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
       
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //simple commands
-    
+    System.out.println("hello world");
     m_testerController.a().onTrue(intake.coolectUntilNoteCommand());
-    m_testerController.x().onTrue(CommandGroupFactory.Yeet());
+    m_testerController.x().onTrue(CommandGroupFactory.yeet());
+    m_testerController.y().whileTrue(intake.setCurrentCommand());
+    m_driverController.rightBumper().whileTrue(shooter.setCurrentYeetCommand());
     
   }
 
