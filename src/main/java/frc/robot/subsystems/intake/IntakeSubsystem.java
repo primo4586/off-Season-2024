@@ -50,7 +50,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
    */
   public Command setCurrentCommand(){
-     System.out.println("intake");
     return runOnce(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)));
   }
 
@@ -63,7 +62,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
    */
   public Command stopIntakeCommand(){
-    System.out.println("stop intake");
     return runOnce(() -> _motor.stopMotor());
   }
 
@@ -80,8 +78,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
   */
   public Command feedShooterCommand(){
-    System.out.println("did not feed");
-    return startEnd(() -> { System.out.println("feed");_motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT));},() -> _motor.stopMotor()).withTimeout(FEED_WAIT_TIME);
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT)),() -> _motor.stopMotor()).withTimeout(FEED_WAIT_TIME);
   }
 
   public Command feedShooterCommand(double current){
@@ -91,7 +88,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
 
   @Override
   public void periodic() {
-    SmartDashboard.setDefaultBoolean("intake state",getSwitchCommand());
+    SmartDashboard.putBoolean("intake state",getSwitchCommand());
     // This method will be called once per scheduler run
   }
   
