@@ -42,4 +42,6 @@ public interface ShooterArmConstants {
 
     double BASE_ANGLE = 0; //TODO: find value
 
+    double RESET_SHOOTER_TIME_LIMIT = 10;
+
 }

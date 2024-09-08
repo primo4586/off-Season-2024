@@ -115,9 +115,6 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     * Set the speed of the motor
     * @param speed Mhe wanted speed in double
     */
-   public void setSpeed(double speed){
-     m_shooterArmMotor.set(speed);
-   }
  
    public void coast() {
      m_shooterArmMotor.setNeutralMode(NeutralModeValue.Coast);
@@ -148,19 +145,17 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
    }
    /**
     * Prepare the home command, if the reverse limit switch is pressed, do
-    * nothing, otherwise move the motor to the reverse limit switch position
-    * at a high speed and wait for the switch to be pressed
+    * nothing, otherwise move 
+    the motor to the reverse limit switch position
+    * at a high speed and wait for the switch to be pressepd
     * 
     * @return The command
     */
    public Command prepareHomeCommand() {
-    if (getReverseLimit()){
-      return runOnce(() -> System.out.println("you are very stupid"));
-    }
-    else{
-      return runOnce(() -> m_shooterArmMotor.set(RESET_SPEED)).
-      andThen(Commands.waitUntil(() -> getReverseLimit())).withTimeout(3);
-    }
+      return runEnd(() -> {m_shooterArmMotor.set(RESET_SPEED); System.out.println("switch not on");}
+      ,() ->{ m_shooterArmMotor.stopMotor();
+      setPosition(0);})
+      .until(() -> getReverseLimit()).withTimeout(RESET_SHOOTER_TIME_LIMIT);
     }
     /* 
      return !getReverseLimit()
@@ -168,6 +163,10 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
          : (runOnce(() -> m_shooterArmMotor.set(RESET_SPEED)).andThen(Commands.waitUntil(() -> !getReverseLimit())))
              .withTimeout(3);
      */
+    public Command setSpeed(double speed){
+      return runEnd(() -> m_shooterArmMotor.set(speed),
+       () -> m_shooterArmMotor.stopMotor());
+    }
    /**
     * Move the arm to a degree
     * @param degree
@@ -191,6 +190,8 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
  
    @Override
    public void periodic() {
+    SmartDashboard.putBoolean("shooter switch ", getReverseLimit());
+    SmartDashboard.putNumber("shooter angel ", getArmPose());
      // This method will be called once per scheduler run
    }
  

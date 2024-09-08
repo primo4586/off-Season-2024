@@ -12,8 +12,12 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+
+import com.ctre.phoenix6.SignalLogger;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -27,6 +31,7 @@ public class RobotContainer {
     new CommandXboxController(1);
   private final CommandXboxController m_testerController =
     new CommandXboxController(2);
+  private final CommandXboxController m_SYSidController = new CommandXboxController(3);
 
   private final IntakeSubsystem intake = IntakeSubsystem.getInstance();
   private  final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
@@ -54,12 +59,23 @@ public class RobotContainer {
     m_testerController.a().onTrue(intake.coolectUntilNoteCommand());
     m_testerController.y().onTrue(intake.setCurrentCommand());
     //m_testerController.x().whileTrue(shooter.setShooterSpeed(0)); THERE IS NO PID YET DO NOT TRY 
-    m_testerController.b().onTrue(shooterArm.prepareHomeCommand()); //TODO: test if it works 
+    m_testerController.start().onTrue(shooterArm.prepareHomeCommand()); //TODO: test if it works 
+    m_testerController.b().whileTrue(shooterArm.setSpeed(0.2));
 
+    
 
     m_testerController.rightTrigger().onTrue(CommandGroupFactory.yeet());
-    m_testerController.rightBumper().onTrue(CommandGroupFactory.shootFromBase()); 
+    m_testerController.rightBumper().onTrue(CommandGroupFactory.shootFromBase());
     
+    // SYSid
+
+    m_SYSidController.start().onTrue(Commands.runOnce(SignalLogger::start));
+    m_SYSidController.back().onTrue(Commands.runOnce(SignalLogger::stop));
+
+    m_SYSidController.a().whileTrue(shooterArm.sysIdDynamic((SysIdRoutine.Direction.kForward)));
+    m_SYSidController.b().whileTrue(shooterArm.sysIdDynamic((SysIdRoutine.Direction.kReverse)));
+    m_SYSidController.x().whileTrue(shooterArm.sysIdQuasistatic((SysIdRoutine.Direction.kForward)));
+    m_SYSidController.y().whileTrue(shooterArm.sysIdDynamic((SysIdRoutine.Direction.kReverse)));
   }
 
   /**

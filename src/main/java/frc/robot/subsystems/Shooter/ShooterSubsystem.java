@@ -43,16 +43,14 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
     up_Motor = new TalonFX(UP_MOTOR_ID, Constants.CAN_BUS_NAME);
     down_Motor = new TalonFX(DOWN_MOTOR_ID, Constants.CAN_BUS_NAME);
     configs();
-    System.out.println("fuck you");
 
   }
 
   public Command setCurrentYeetCommand(){
-
-    System.out.println("yeet");
-    return runOnce(() -> {
+    return runEnd(() -> {
       up_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));
-      down_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));});
+      down_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));},
+      () -> {up_Motor.stopMotor(); down_Motor.stopMotor();});
   }
 
   /** a command for setting a speed to the motors */
@@ -96,7 +94,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   @Override
   public void periodic() {
-    SmartDashboard.setDefaultNumber("shooter", up_Motor.getSupplyCurrent().getValueAsDouble());
+    SmartDashboard.putNumber("shooter", up_Motor.getSupplyCurrent().getValueAsDouble());
     // This method will be called once per scheduler run
   }
 
