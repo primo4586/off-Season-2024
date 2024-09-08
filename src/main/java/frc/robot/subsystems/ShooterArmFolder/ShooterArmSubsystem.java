@@ -154,11 +154,20 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     * @return The command
     */
    public Command prepareHomeCommand() {
+    if (getReverseLimit()){
+      return runOnce(() -> System.out.println("you are very stupid"));
+    }
+    else{
+      return runOnce(() -> m_shooterArmMotor.set(RESET_SPEED)).
+      andThen(Commands.waitUntil(() -> getReverseLimit())).withTimeout(3);
+    }
+    }
+    /* 
      return !getReverseLimit()
          ? Commands.none()
          : (runOnce(() -> m_shooterArmMotor.set(RESET_SPEED)).andThen(Commands.waitUntil(() -> !getReverseLimit())))
              .withTimeout(3);
-   }
+     */
    /**
     * Move the arm to a degree
     * @param degree
@@ -240,8 +249,5 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
 
         /* Optimize out the other signals, since they're not useful for SysId */
         m_shooterArmMotor.optimizeBusUtilization();
-
-        /* Start the signal logger */
-        SignalLogger.start();
       }
  }
