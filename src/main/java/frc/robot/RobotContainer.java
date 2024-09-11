@@ -72,10 +72,10 @@ public class RobotContainer {
     m_SYSidController.start().onTrue(Commands.runOnce(SignalLogger::start));
     m_SYSidController.back().onTrue(Commands.runOnce(SignalLogger::stop));
 
-    m_SYSidController.a().whileTrue(shooterArm.sysIdDynamic((SysIdRoutine.Direction.kForward)));
-    m_SYSidController.b().whileTrue(shooterArm.sysIdDynamic((SysIdRoutine.Direction.kReverse)));
-    m_SYSidController.x().whileTrue(shooterArm.sysIdQuasistatic((SysIdRoutine.Direction.kForward)));
-    m_SYSidController.y().whileTrue(shooterArm.sysIdDynamic((SysIdRoutine.Direction.kReverse)));
+    m_SYSidController.a().whileTrue(shooter.sysIdDynamic((SysIdRoutine.Direction.kForward)));
+    m_SYSidController.b().whileTrue(shooter.sysIdDynamic((SysIdRoutine.Direction.kReverse)));
+    m_SYSidController.x().whileTrue(shooter.sysIdQuasistatic((SysIdRoutine.Direction.kForward)));
+    m_SYSidController.y().whileTrue(shooter.sysIdQuasistatic((SysIdRoutine.Direction.kReverse)));
   }
 
   /**
