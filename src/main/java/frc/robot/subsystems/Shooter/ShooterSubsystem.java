@@ -5,70 +5,30 @@
 package frc.robot.subsystems.Shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import static edu.wpi.first.units.Units.Volts;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Voltage;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase implements ShooterConstants {
   /** Creates a new ShooterSubsystem. */
   private TalonFX up_Motor;
   private TalonFX down_Motor;
-  private static final MotionMagicVelocityVoltage mm = new MotionMagicVelocityVoltage(0,
-      MOTION_MAGIC_ACCELERATION, true, 0.0, 0, false, false, false);
+  private final MotionMagicVelocityVoltage mm = new MotionMagicVelocityVoltage
+  (0, MOTION_MAGIC_ACCELERATION, true,
+   0, 0, false,
+    false, false);
   private TorqueCurrentFOC currentFOC = new TorqueCurrentFOC(0);
-       private final VoltageOut m_sysIdControl = new VoltageOut(0, true, false, false, false);
-
-    private final SysIdRoutine m_downSysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,         // Use default ramp rate (1 V/s)
-                Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
-                null,          // Use default timeout (10 s)
-                                       // Log state with Phoenix SignalLogger class
-                (state)->SignalLogger.writeString("Sysid up", state.toString())),
-            new SysIdRoutine.Mechanism(
-                (Measure<Voltage> volts)-> up_Motor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
-                null,
-                this));
-                    
-      private final SysIdRoutine m_upSysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,         // Use default ramp rate (1 V/s)
-                Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
-                null,          // Use default timeout (10 s)
-                                       // Log state with Phoenix SignalLogger class
-                (state)->{
-                  double velocity = down_Motor.getVelocity().getValueAsDouble();
-                  double position = down_Motor.getPosition().getValueAsDouble();
-                  double appliedVoltage = down_Motor.getMotorVoltage().getValueAsDouble();
-
-                  SignalLogger.writeString("sysid_state",state.toString());
-                  SignalLogger.writeDouble("fly_wheel velocity", velocity);
-                  SignalLogger.writeDouble("fly_wheel position ", position);
-                  SignalLogger.writeDouble("fly_wheel voltage", appliedVoltage);
-
-                }),
-            new SysIdRoutine.Mechanism(
-                (Measure<Voltage> volts)-> down_Motor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
-                null,
-                this));
 
   // using a singleton
   private static ShooterSubsystem instance;
@@ -134,16 +94,6 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
     return Math.abs(up_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR
         && Math.abs(down_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR;
   }
-
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return m_upSysIdRoutine.quasistatic(direction);
-}
-public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-;
-    return m_upSysIdRoutine.dynamic(direction);
-}  
-
-
 
   @Override
   public void periodic() {
@@ -218,25 +168,7 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         break;
       System.out.println("status of upper motor configuration is not okay");
     }
-    
 
-  }
-
-  private void sysidConfigs(){
-    BaseStatusSignal.setUpdateFrequencyForAll(250,
-    up_Motor.getPosition(),
-    up_Motor.getVelocity(),
-    up_Motor.getMotorVoltage());
-
-    /* Optimize out the other signals, since they're not useful for SysId */
-    up_Motor.optimizeBusUtilization();
-
-    BaseStatusSignal.setUpdateFrequencyForAll(250,
-    down_Motor.getPosition(),
-    down_Motor.getVelocity(),
-    down_Motor.getMotorVoltage());
-
-    down_Motor.optimizeBusUtilization();
   }
 
 }
