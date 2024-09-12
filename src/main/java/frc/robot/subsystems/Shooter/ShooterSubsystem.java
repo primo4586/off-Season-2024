@@ -97,8 +97,12 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("shooter", up_Motor.getSupplyCurrent().getValueAsDouble());
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("up motor velocity", up_Motor.getVelocity().getValue());
+    SmartDashboard.putNumber("down motor velocity", down_Motor.getVelocity().getValue());
+    SmartDashboard.putBoolean("shooter at velocity", isAtVelocity());
+    SmartDashboard.putNumber("up shooter voltage", up_Motor.getMotorVoltage().getValueAsDouble());
+    SmartDashboard.putNumber("down shooter voltage", down_Motor.getMotorVoltage().getValueAsDouble());
   }
 
   private void configs() {

@@ -88,7 +88,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("intake state",getSwitchCommand());
+    SmartDashboard.putNumber("intake motor speed", _motor.getVelocity().getValue());
+    SmartDashboard.putNumber("intake motor current", _motor.getSupplyCurrent().getValue());
+    SmartDashboard.putBoolean("switch", getSwitchCommand());
     // This method will be called once per scheduler run
   }
   
