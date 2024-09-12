@@ -11,7 +11,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
 public interface Vision_Constants {
-
+        //TODO: add camera names
     String K_RIGHT_CAMERA_NAME = "YOUR CAMERA NAME";
     String K_LEFT_CAMERA_NAME = "YOUR CAMERA NAME";
     String K_NOTE_CAMERA_NAME = "YOUR CAMERA NAME";
