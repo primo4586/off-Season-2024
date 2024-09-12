@@ -9,6 +9,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -23,8 +24,10 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   /** Creates a new ShooterSubsystem. */
   private TalonFX up_Motor;
   private TalonFX down_Motor;
-  private static final MotionMagicVelocityTorqueCurrentFOC mm = new MotionMagicVelocityTorqueCurrentFOC(0,
-      MOTION_MAGIC_ACCELERATION, true, 0.0, 0, false, false, false);
+  private final MotionMagicVelocityVoltage mm = new MotionMagicVelocityVoltage
+  (0, MOTION_MAGIC_ACCELERATION, true,
+   0, 0, false,
+    false, false);
   private TorqueCurrentFOC currentFOC = new TorqueCurrentFOC(0);
 
   // using a singleton
