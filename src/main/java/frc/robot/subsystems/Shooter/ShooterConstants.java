@@ -31,10 +31,10 @@ public interface ShooterConstants {
     int MAX_ERROR = 2;
 
     // PID values for up motor
-    double UP_KP = 1.266;
-    double UP_KD = 0.0;
-    double UP_KS = 0.12129;//0.16
-    double UP_KV = 0.71503;
+    double UP_KP = 0.45;
+    double UP_KD = 0.3;
+    double UP_KS = 0.4586;//0.16
+    double UP_KV = 0.064518;
     double UP_KA = 0.24784;
 
    // PID values for down motor
