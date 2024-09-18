@@ -51,18 +51,28 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
    private final DigitalInput m_limitSwitch = new DigitalInput(SWITCH_ID);
        private final VoltageOut m_sysIdControl = new VoltageOut(0);
 
-    private final SysIdRoutine m_sysIdRoutine =
-        new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null,         // Use default ramp rate (1 V/s)
-                Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
-                null,          // Use default timeout (10 s)
-                                       // Log state with Phoenix SignalLogger class
-                (state)->SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                (Measure<Voltage> volts)-> m_shooterArmMotor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
-                null,
-                this));
+       private final SysIdRoutine m_upSysIdRoutine =
+       new SysIdRoutine(
+           new SysIdRoutine.Config(
+               null,         // Use default ramp rate (1 V/s)
+               Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
+               null,          // Use default timeout (10 s)
+                                      // Log state with Phoenix SignalLogger class
+               (state)->{
+                 double velocity = m_shooterArmMotor.getVelocity().getValueAsDouble();
+                 double position = m_shooterArmMotor.getPosition().getValueAsDouble();
+                 double appliedVoltage = m_shooterArmMotor.getMotorVoltage().getValueAsDouble();
+
+                 SignalLogger.writeString("sysid_state",state.toString());
+                 SignalLogger.writeDouble("fly_wheel velocity", velocity);
+                 SignalLogger.writeDouble("fly_wheel position ", position);
+                 SignalLogger.writeDouble("fly_wheel voltage", appliedVoltage);
+
+               }),
+           new SysIdRoutine.Mechanism(
+               (Measure<Voltage> volts)-> m_shooterArmMotor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
+               null,
+               this));
    // singelton
    private static ShooterArmSubsystem instance;
 
@@ -180,11 +190,11 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
    }
    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return m_sysIdRoutine.quasistatic(direction);
+    return m_upSysIdRoutine.quasistatic(direction);
 }
 public Command sysIdDynamic(SysIdRoutine.Direction direction) {
 ;
-    return m_sysIdRoutine.dynamic(direction);
+    return m_upSysIdRoutine.dynamic(direction);
 }  
    
  

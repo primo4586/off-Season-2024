@@ -55,9 +55,9 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
                 null,          // Use default timeout (10 s)
                                        // Log state with Phoenix SignalLogger class
                 (state)->{
-                  double velocity = up_Motor.getVelocity().getValueAsDouble();
-                  double position = up_Motor.getPosition().getValueAsDouble();
-                  double appliedVoltage = up_Motor.getMotorVoltage().getValueAsDouble();
+                  double velocity = down_Motor.getVelocity().getValueAsDouble();
+                  double position = down_Motor.getPosition().getValueAsDouble();
+                  double appliedVoltage = down_Motor.getMotorVoltage().getValueAsDouble();
 
                   SignalLogger.writeString("sysid_state",state.toString());
                   SignalLogger.writeDouble("fly_wheel velocity", velocity);
@@ -66,7 +66,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
                 }),
             new SysIdRoutine.Mechanism(
-                (Measure<Voltage> volts)-> up_Motor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
+                (Measure<Voltage> volts)-> down_Motor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
                 null,
                 this));
 
