@@ -61,6 +61,7 @@ public class RobotContainer {
     //m_testerController.x().whileTrue(shooter.setShooterSpeed(0)); THERE IS NO PID YET DO NOT TRY 
     m_testerController.start().onTrue(shooterArm.prepareHomeCommand()); //TODO: test if it works 
     m_testerController.b().whileTrue(shooterArm.setSpeed(0.2));
+    
 
     
 

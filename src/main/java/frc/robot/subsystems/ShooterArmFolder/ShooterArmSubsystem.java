@@ -172,11 +172,11 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
  
    @Override
    public void periodic() {
-    SmartDashboard.putNumber("angel", getArmPose());
-    SmartDashboard.putNumber("speed", m_shooterArmMotor.getVelocity().getValue());
-    SmartDashboard.putNumber("motor voltage", m_shooterArmMotor.getMotorVoltage().getValueAsDouble());
+    SmartDashboard.putNumber("Arm positon", getArmPose());
+    SmartDashboard.putNumber("arm velocity", m_shooterArmMotor.getVelocity().getValue());
+    SmartDashboard.putNumber("arm voltage", m_shooterArmMotor.getMotorVoltage().getValueAsDouble());
     SmartDashboard.putBoolean("is arm ready", isArmReady());
-    SmartDashboard.putBoolean("switch", getReverseLimit());
+    SmartDashboard.putBoolean("arm switch", getReverseLimit());
    }
  
    private void configs(){
