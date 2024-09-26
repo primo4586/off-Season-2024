@@ -36,7 +36,8 @@ import edu.wpi.first.wpilibj.RobotState;
  import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  import edu.wpi.first.wpilibj2.command.Command;
  import edu.wpi.first.wpilibj2.command.Commands;
- import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import static edu.wpi.first.units.MutableMeasure.mutable;
@@ -183,12 +184,13 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     * @return
     */
    public Command moveArmTo(double degree){
-     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree)));
+     return new ParallelCommandGroup(runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree))));
    }
    
   public Command moveArmToBase() {
-    return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
-   }
+    System.out.println("shooter arm go brrrrrrrr");
+    return new ParallelCommandGroup(runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE))));
+  }
    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_upSysIdRoutine.quasistatic(direction);
 }

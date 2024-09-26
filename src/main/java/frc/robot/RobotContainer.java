@@ -59,8 +59,8 @@ public class RobotContainer {
     m_testerController.a().onTrue(intake.coolectUntilNoteCommand());
     m_testerController.y().onTrue(intake.setCurrentCommand());
     //m_testerController.x().whileTrue(shooter.setShooterSpeed(0)); THERE IS NO PID YET DO NOT TRY 
-    m_testerController.start().onTrue(shooterArm.prepareHomeCommand()); //TODO: test if it works 
-    m_testerController.b().whileTrue(shooterArm.setSpeed(0.2));
+    m_testerController.start().onTrue(shooterArm.prepareHomeCommand());
+    m_testerController.b().onTrue(shooterArm.moveArmTo(40));
 
     
 

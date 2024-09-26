@@ -152,6 +152,7 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
   }
 
   private void configs() {
+    System.out.println("shooter configs");
     // declaring Configs
     TalonFXConfiguration upConfigs = new TalonFXConfiguration();
     TalonFXConfiguration downConfigs = new TalonFXConfiguration();
@@ -213,9 +214,12 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     // Checking if up_Motor apply configs
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
+      if (status.isOK()) {
+      status = down_Motor.getConfigurator().apply(downConfigs);
       status = up_Motor.getConfigurator().apply(upConfigs);
-      if (status.isOK())
         break;
+      }
+       
       System.out.println("status of upper motor configuration is not okay");
     }
     
