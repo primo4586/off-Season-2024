@@ -68,7 +68,7 @@ public class RobotContainer {
     m_testerController.rightBumper().onTrue(CommandGroupFactory.shootFromBase());
     
     // SYSid
-
+    /* 
     m_SYSidController.start().onTrue(Commands.runOnce(SignalLogger::start));
     m_SYSidController.back().onTrue(Commands.runOnce(SignalLogger::stop));
 

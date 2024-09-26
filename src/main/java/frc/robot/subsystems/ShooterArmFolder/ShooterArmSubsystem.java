@@ -15,6 +15,8 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
  import com.ctre.phoenix6.configs.TalonFXConfiguration;
  import com.ctre.phoenix6.configs.TalonFXConfigurator;
  import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
  import com.ctre.phoenix6.signals.ForwardLimitValue;
@@ -48,7 +50,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
 
-   private final MotionMagicExpoTorqueCurrentFOC mm = new MotionMagicExpoTorqueCurrentFOC(0);
+   private final MotionMagicVoltage mm = new MotionMagicVoltage(0, true, 0, 0, false, true, false);
    private final DigitalInput m_limitSwitch = new DigitalInput(SWITCH_ID);
        private final VoltageOut m_sysIdControl = new VoltageOut(0);
 
@@ -215,6 +217,7 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
      mm.MotionMagicCruiseVelocity = MM_CRUISE;
      mm.MotionMagicAcceleration = MM_ACCELERATION;
      mm.MotionMagicJerk = MM_JERK;
+
  
      //Slot:
      configuration.Slot0.kP = KP;
