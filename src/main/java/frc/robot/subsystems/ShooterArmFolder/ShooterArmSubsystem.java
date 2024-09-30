@@ -17,6 +17,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
  import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
  import com.ctre.phoenix6.signals.ForwardLimitValue;
@@ -50,7 +51,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
 
-   private final MotionMagicVoltage mm = new MotionMagicVoltage(0, true, 0, 0, false, true, false);
+   private final PositionVoltage mm = new PositionVoltage(0);
    private final DigitalInput m_limitSwitch = new DigitalInput(SWITCH_ID);
        private final VoltageOut m_sysIdControl = new VoltageOut(0);
 
@@ -113,6 +114,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
  
    
    public boolean isArmReady(){
+    System.out.println(Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
      return (Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
    }
  
@@ -186,12 +188,12 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     * @return
     */
    public Command moveArmTo(double degree){
-     return new ParallelCommandGroup(runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree))));
+    
+     return runOnce(() -> {m_shooterArmMotor.setControl(mm.withPosition(degree)); System.out.println("F U ZIV");});
    }
    
   public Command moveArmToBase() {
-    System.out.println("shooter arm go brrrrrrrr");
-    return new ParallelCommandGroup(runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE))));
+    return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
   }
    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_upSysIdRoutine.quasistatic(direction);
@@ -226,7 +228,7 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
      configuration.Slot0.kS = KS;
  
    //Peeks:
-     configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+     configuration.CurrentLimits.SupplyCurrentLimitEnable = false;
      configuration.CurrentLimits.SupplyCurrentLimit = PEAK_CURRENT;
  
  
@@ -235,9 +237,9 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
      configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
      configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = FOWORD_LIMIT;
      configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = BACKWARD_LIMIT;
-     configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+     configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
      configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
-     configuration.HardwareLimitSwitch.ReverseLimitEnable = true;
+     configuration.HardwareLimitSwitch.ReverseLimitEnable = false;
  
      configuration.Feedback.SensorToMechanismRatio = TICKS_PER_DEGREE; 
      configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;

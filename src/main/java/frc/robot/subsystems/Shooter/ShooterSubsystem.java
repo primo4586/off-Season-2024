@@ -98,9 +98,12 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** a command for setting a speed to the motors */
   public Command setShooterSpeed(double speed) {
-    return runOnce(() -> {
+    return runEnd(() -> {
       up_Motor.setControl(mm.withVelocity(speed));
       down_Motor.setControl(mm.withVelocity(speed));
+    }, () -> {
+      up_Motor.stopMotor();
+      down_Motor.stopMotor();
     });
   }
   
@@ -131,6 +134,9 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** a command for checking if the motors are at the speed */
   public boolean isAtVelocity() {
+    System.out.printf("shooter");
+    System.out.println(Math.abs(up_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR
+        && Math.abs(down_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR);
     return Math.abs(up_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR
         && Math.abs(down_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR;
   }
@@ -214,13 +220,15 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     // Checking if up_Motor apply configs
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
-      if (status.isOK()) {
       status = down_Motor.getConfigurator().apply(downConfigs);
-      status = up_Motor.getConfigurator().apply(upConfigs);
+      status = up_Motor.getConfigurator().apply(upConfigs);  
+      if (status.isOK()) {
+        System.out.println("shooter is ok");
         break;
       }
-       
-      System.out.println("status of upper motor configuration is not okay");
+      else{
+        System.out.println("shooter not ok");
+      }
     }
     
 

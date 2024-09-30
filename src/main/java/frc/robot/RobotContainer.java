@@ -60,7 +60,7 @@ public class RobotContainer {
     m_testerController.y().onTrue(intake.setCurrentCommand());
     //m_testerController.x().whileTrue(shooter.setShooterSpeed(0)); THERE IS NO PID YET DO NOT TRY 
     m_testerController.start().onTrue(shooterArm.prepareHomeCommand());
-    m_testerController.b().onTrue(shooterArm.moveArmTo(40));
+    m_testerController.b().onTrue(shooterArm.moveArmTo(90));
 
     
 
@@ -83,4 +83,5 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  }
 }
