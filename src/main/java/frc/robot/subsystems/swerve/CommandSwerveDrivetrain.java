@@ -1,7 +1,10 @@
 package frc.robot.subsystems.swerve;
-
+import frc.robot.subsystems.Vision.Vision_Constants;
+import frc.robot.subsystems.Vision.AprilTagCamera;
+import frc.robot.subsystems.Vision.ObjectDetectionCamera;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -24,6 +27,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
@@ -31,6 +35,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private final Rotation2d RedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean hasAppliedOperatorPerspective = false;
+
+    private AprilTagCamera rightAprilTagCamera = new AprilTagCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
+    private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
+
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -79,5 +87,35 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 hasAppliedOperatorPerspective = true;
             });
         }
+
+         // Correct pose estimate with vision measurements
+        var rightVisionEst = rightAprilTagCamera.getEstimatedGlobalPose(); //latest estimated robot pose
+        rightVisionEst.ifPresent(
+                rightEst -> {
+                    //2d estimated pose
+                    var estPose = rightEst.estimatedPose.toPose2d();
+
+                    SignalLogger.writeDoubleArray("right camera pose",
+                            new double[] { estPose.getX(), estPose.getY(), estPose.getRotation().getDegrees() });
+
+                    // Change our trust in the measurement based on the tags we can see
+                    var estStdDevs = rightAprilTagCamera.getEstimationStdDevs(estPose);
+                    this.addVisionMeasurement(rightEst.estimatedPose.toPose2d(), rightEst.timestampSeconds, estStdDevs);
+                });
+
+                //same to left:
+        var leftVisionEst = leftAprilTagCamera.getEstimatedGlobalPose();
+        leftVisionEst.ifPresent(
+                leftEst -> {
+                    var estPose = leftEst.estimatedPose.toPose2d();
+
+                    SignalLogger.writeDoubleArray("left camera pose",
+                            new double[] { estPose.getX(), estPose.getY(), estPose.getRotation().getDegrees() });
+
+                    // Change our trust in the measurement based on the tags we can see
+                    var estStdDevs = leftAprilTagCamera.getEstimationStdDevs(estPose);
+
+                    this.addVisionMeasurement(leftEst.estimatedPose.toPose2d(), leftEst.timestampSeconds, estStdDevs);
+                });
     }
 }
