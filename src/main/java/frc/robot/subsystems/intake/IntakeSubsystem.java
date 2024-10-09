@@ -70,7 +70,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
    */
   public Command coolectUntilNoteCommand(){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)),() -> _motor.stopMotor()).until(() -> getSwitchCommand());
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)),
+    () -> _motor.stopMotor()).until(() -> getSwitchCommand())
+    .withTimeout(COLLECT_TIMEOUT);
   }
 
   /**
@@ -78,7 +80,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
   */
   public Command feedShooterCommand(){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT)),() -> _motor.stopMotor()).withTimeout(FEED_WAIT_TIME);
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT)),
+    () -> _motor.stopMotor()).
+    withTimeout(FEED_WAIT_TIME);
   }
 
   public Command feedShooterCommand(double current){
