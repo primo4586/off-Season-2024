@@ -23,7 +23,11 @@ public class CommandGroupFactory {
         .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())
         .andThen(intake.feedShooterCommand())), shooterArm.moveArmToBase(),shooter.shootFromBase());
         }
+    public static Command prepareToShoot(){// TODO: add shooter arm
+        return new ParallelCommandGroup(shooter.shootFromFar());
+    }
 
+    //TODO: add swerve steer
     public static Command shootFromMidum(){
         return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)// waits one rio scyle
         .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())

@@ -70,10 +70,11 @@ public class RobotContainer {
     //driver command
     driverController.a().onTrue(intake.coolectUntilNoteCommand());
 
-     driverController.rightBumper().onTrue(CommandGroupFactory.shootFromBase()); 
-      
+    driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
+    driverController.leftTrigger().onTrue(CommandGroupFactory.shootFromMidum());
     // op command
-    operaController.a().onTrue(CommandGroupFactory.yeet());
+    operaController.rightBumper().onTrue(CommandGroupFactory.yeet());
+     operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
 
     climb.setDefaultCommand(climb.setSpeedCommand(
         () -> operaController.getLeftX() / 2,
