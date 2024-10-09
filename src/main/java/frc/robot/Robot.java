@@ -21,20 +21,20 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private final boolean UseLimelight = false;
+  private ObjectDetectionCamera camera = new ObjectDetectionCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
+
 
   @Override
   public void robotInit() {
-
     m_robotContainer = new RobotContainer();
-    ObjectDetectionCamera camera = new ObjectDetectionCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
     //var leftVisionEst = LeftCamera.getEstimatedGlobalPose();
     //var estPose = LeftCamera.getEstimatedGlobalPose();
-    SmartDashboard.putNumber("angle from camera:",camera.getAngleFromTarget()); 
-    
   }
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("angle from camera:",camera.getAngleFromTarget()); 
+
     
     
     /**
