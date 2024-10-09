@@ -82,10 +82,11 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** a command for shooting from base */
   public Command shootFromBase() {
-    return runOnce(() -> {
+    return runEnd(() -> {
       up_Motor.setControl(mm.withVelocity(BASE_SPEED));
       down_Motor.setControl(mm.withVelocity(BASE_SPEED));
-    });
+    }, () -> {up_Motor.stopMotor();
+    down_Motor.stopMotor();});
   }
 
   /** a command for shooting from Far */

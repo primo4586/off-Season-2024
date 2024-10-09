@@ -114,8 +114,6 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
  
    
    public boolean isArmReady(){
-    System.out.println(mm.Position + " | " + getArmPose());
-    System.out.println(Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
      return (Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
    }
  
@@ -212,6 +210,7 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
  
    @Override
    public void periodic() {
+    System.out.println(getArmPose());
     SmartDashboard.putNumber("Arm positon", getArmPose());
     SmartDashboard.putNumber("arm velocity", m_shooterArmMotor.getVelocity().getValue());
     SmartDashboard.putNumber("arm voltage", m_shooterArmMotor.getMotorVoltage().getValueAsDouble());

@@ -39,9 +39,9 @@ public interface ShooterArmConstants {
     double MINIMUM_ERROR = 0.5;
     double RESET_SPEED = -0.2;
 
-    double BASE_ANGLE = 60; //TODO: find value
+    double BASE_ANGLE = 35.5;
 
     double RESET_SHOOTER_TIME_LIMIT = 10;
-    double MEDIUM_SHOOTER_ANGEL = 45; //TODO find value
+    double MEDIUM_SHOOTER_ANGEL = 50;
 
 }

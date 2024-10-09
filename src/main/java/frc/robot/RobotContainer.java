@@ -68,13 +68,15 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     //driver command
-    driverController.a().onTrue(intake.coolectUntilNoteCommand());
+    driverController.a().onTrue(CommandGroupFactory.collectUntilNote());
+    driverController.x().whileTrue(shooterArm.setSpeed(0.2));
+    driverController.b().whileTrue(shooterArm.setSpeed(-0.2));
     driverController.start().onTrue(shooterArm.prepareHomeCommand());
 
     driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
     driverController.leftTrigger().onTrue(CommandGroupFactory.shootFromMidum());
     // op command
-    operaController.rightBumper().onTrue(CommandGroupFactory.yeet());
+    //driverController.rightBumper().onTrue(CommandGroupFactory.yeet());
      operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
 
     climb.setDefaultCommand(climb.setSpeedCommand(
