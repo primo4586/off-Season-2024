@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems.Vision;
-
 import org.photonvision.PhotonCamera;
 
 /** Add your docs here. */
