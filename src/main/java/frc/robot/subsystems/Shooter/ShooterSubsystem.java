@@ -180,10 +180,5 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
         break;
       }
     }
-    
-
   }
-
-  }
-
 }
