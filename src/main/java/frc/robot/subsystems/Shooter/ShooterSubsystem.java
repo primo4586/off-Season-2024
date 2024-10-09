@@ -176,7 +176,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
       status = down_Motor.getConfigurator().apply(downConfigs);
       status = up_Motor.getConfigurator().apply(upConfigs);  
       if (status.isOK()) {
-        System.out.println("shooter is ok");
+        System.out.println("shooter is good");
         break;
       }
     }
