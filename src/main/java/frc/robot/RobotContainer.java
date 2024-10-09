@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CommandGroupFactory;
-import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -25,7 +24,6 @@ import frc.robot.subsystems.swerve.TunerConstants;
 public class RobotContainer {
 
   private IntakeSubsystem intake = IntakeSubsystem.getInstance();
-  private ClimbSubsystem climb = ClimbSubsystem.getInstance();
   private ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
   private ShooterSubsystem shooter = ShooterSubsystem.getInstance();
 
@@ -75,12 +73,7 @@ public class RobotContainer {
     // op command
     operaController.rightBumper().onTrue(CommandGroupFactory.yeet());
      operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
-
-    climb.setDefaultCommand(climb.setSpeedCommand(
-        () -> operaController.getLeftX() / 2,
-         () -> operaController.getRightX() / 2 )); // TODO: checks if works
   }
-
   public RobotContainer() {
     configureBindings();
   }
