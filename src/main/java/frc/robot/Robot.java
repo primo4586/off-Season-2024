@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
+import frc.robot.subsystems.Vision.AprilTagCamera;
+import frc.robot.subsystems.Vision.ObjectDetectionCamera;
+import frc.robot.subsystems.Vision.Vision_Constants;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -26,7 +29,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
+    ObjectDetectionCamera camera = new ObjectDetectionCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
+    //var leftVisionEst = LeftCamera.getEstimatedGlobalPose();
+    //var estPose = LeftCamera.getEstimatedGlobalPose();
+    SmartDashboard.putNumber("angle from camera:",camera.getAngleFromTarget()); 
+    
     /**
      * This example of adding Limelight is very simple and may not be sufficient for on-field use.
      * Users typically need to provide a standard deviation that scales with the distance to target

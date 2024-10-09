@@ -12,9 +12,9 @@ import edu.wpi.first.math.numbers.N3;
 
 public interface Vision_Constants {
         //TODO: add camera names
-    String K_RIGHT_CAMERA_NAME = "YOUR CAMERA NAME";
-    String K_LEFT_CAMERA_NAME = "YOUR CAMERA NAME";
-    String K_NOTE_CAMERA_NAME = "YOUR CAMERA NAME";
+        String K_RIGHT_CAMERA_NAME = "right Camra";
+        String K_LEFT_CAMERA_NAME = "Left Camera";
+        String K_NOTE_CAMERA_NAME = "Note Camera";
 
     Transform3d K_RIGHT_ROBOT_TO_CAM = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
             new Rotation3d(0, 0, 0));

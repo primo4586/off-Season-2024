@@ -3,7 +3,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -14,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class CommandGroupFactory {
     private static final IntakeSubsystem intake = IntakeSubsystem.getInstance();
-    private static final ClimbSubsystem climb = ClimbSubsystem.getInstance();
     private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
     private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
 

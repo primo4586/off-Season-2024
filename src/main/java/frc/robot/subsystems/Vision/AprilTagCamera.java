@@ -77,6 +77,13 @@ public class AprilTagCamera implements Vision_Constants {
             lastEstTimestamp = latestTimestamp;
         return visionEst;
     }
+    
+    public boolean getDetectingObject() {
+        return camera.getLatestResult().hasTargets();
+    }
+    public double getAngleFromTarget() {
+        return getDetectingObject() ? camera.getLatestResult().getBestTarget().getYaw() : 0;
+    }
 
     /**
      * The standard deviations of the estimated pose from
