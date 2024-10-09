@@ -16,7 +16,7 @@ public interface ShooterArmConstants {
     double MM_ACCELERATION = 300;
     double MM_JERK = 1600;
 
-    double KP = 0.35;
+    double KP = 0.5;
     double KD = 0;
     double KS  = 0;
     double KA = 0;
@@ -36,7 +36,7 @@ public interface ShooterArmConstants {
     true);
 
     // Condition Constants
-    double MINIMUM_ERROR = 0.1;
+    double MINIMUM_ERROR = 0.5;
     double RESET_SPEED = -0.2;
 
     double BASE_ANGLE = 60; //TODO: find value

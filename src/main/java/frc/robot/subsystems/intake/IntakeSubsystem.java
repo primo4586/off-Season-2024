@@ -71,7 +71,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    */
   public Command coolectUntilNoteCommand(){
     return startEnd(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)),
-    () -> _motor.stopMotor()).until(() -> getSwitchCommand())
+    () -> _motor.stopMotor())
+    .andThen(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT))).withTimeout(0.1)
+    .until(() -> getSwitchCommand())
     .withTimeout(COLLECT_TIMEOUT);
   }
 

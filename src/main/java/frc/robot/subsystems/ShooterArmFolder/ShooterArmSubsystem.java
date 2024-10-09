@@ -114,6 +114,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
  
    
    public boolean isArmReady(){
+    System.out.println(mm.Position + " | " + getArmPose());
     System.out.println(Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
      return (Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
    }
