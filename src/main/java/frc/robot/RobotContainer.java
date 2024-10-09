@@ -77,8 +77,8 @@ public class RobotContainer {
      operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
 
     climb.setDefaultCommand(climb.setSpeedCommand(
-        () -> operaController.getLeftX() / 2,
-         () -> operaController.getRightX() / 2 )); // TODO: checks if works
+        () -> operaController.getRightY() *- 1,
+         () -> operaController.getLeftY() * -1)); // TODO: checks if works
   }
 
   public RobotContainer() {
