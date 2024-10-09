@@ -17,6 +17,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
  import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
  import com.ctre.phoenix6.signals.ForwardLimitValue;
@@ -38,7 +39,8 @@ import edu.wpi.first.wpilibj.RobotState;
  import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  import edu.wpi.first.wpilibj2.command.Command;
  import edu.wpi.first.wpilibj2.command.Commands;
- import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import static edu.wpi.first.units.MutableMeasure.mutable;
@@ -49,10 +51,32 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
 
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
 
-   private final MotionMagicVoltage mm = new MotionMagicVoltage(0, true, 0, 0, false, true, false);
+   private final PositionVoltage mm = new PositionVoltage(0);
    private final DigitalInput m_limitSwitch = new DigitalInput(SWITCH_ID);
        private final VoltageOut m_sysIdControl = new VoltageOut(0);
 
+       private final SysIdRoutine m_upSysIdRoutine =
+       new SysIdRoutine(
+           new SysIdRoutine.Config(
+               null,         // Use default ramp rate (1 V/s)
+               Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
+               null,          // Use default timeout (10 s)
+                                      // Log state with Phoenix SignalLogger class
+               (state)->{
+                 double velocity = m_shooterArmMotor.getVelocity().getValueAsDouble();
+                 double position = m_shooterArmMotor.getPosition().getValueAsDouble();
+                 double appliedVoltage = m_shooterArmMotor.getMotorVoltage().getValueAsDouble();
+
+                 SignalLogger.writeString("sysid_state",state.toString());
+                 SignalLogger.writeDouble("fly_wheel velocity", velocity);
+                 SignalLogger.writeDouble("fly_wheel position ", position);
+                 SignalLogger.writeDouble("fly_wheel voltage", appliedVoltage);
+
+               }),
+           new SysIdRoutine.Mechanism(
+               (Measure<Voltage> volts)-> m_shooterArmMotor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
+               null,
+               this));
    // singelton
    private static ShooterArmSubsystem instance;
 
@@ -69,6 +93,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
       
      m_shooterArmMotor = new TalonFX(SHOOTER_ARM_ID, Constants.CAN_BUS_NAME); // crearts new motor
      configs();
+     sysidConfigs();
    }
  
     /**
@@ -89,6 +114,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
  
    
    public boolean isArmReady(){
+    System.out.println(Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
      return (Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
    }
  
@@ -162,12 +188,20 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     * @return
     */
    public Command moveArmTo(double degree){
-     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree)));
+    
+     return runOnce(() -> {m_shooterArmMotor.setControl(mm.withPosition(degree)); System.out.println("F U ZIV");});
    }
    
   public Command moveArmToBase() {
     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
-   }
+  }
+   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_upSysIdRoutine.quasistatic(direction);
+}
+public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+;
+    return m_upSysIdRoutine.dynamic(direction);
+}  
    
  
    @Override
@@ -194,7 +228,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
      configuration.Slot0.kS = KS;
  
    //Peeks:
-     configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+     configuration.CurrentLimits.SupplyCurrentLimitEnable = false;
      configuration.CurrentLimits.SupplyCurrentLimit = PEAK_CURRENT;
  
  
@@ -203,9 +237,9 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
      configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
      configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = FOWORD_LIMIT;
      configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = BACKWARD_LIMIT;
-     configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+     configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
      configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
-     configuration.HardwareLimitSwitch.ReverseLimitEnable = true;
+     configuration.HardwareLimitSwitch.ReverseLimitEnable = false;
  
      configuration.Feedback.SensorToMechanismRatio = TICKS_PER_DEGREE; 
      configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -222,4 +256,16 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
      if (!statusCode.isOK())
        System.out.println("Shooter Arm could not apply config, error code:" + statusCode.toString());
    }
+      /**
+      * settings for sysid
+      */
+      private void sysidConfigs(){
+        BaseStatusSignal.setUpdateFrequencyForAll(250,
+        m_shooterArmMotor.getPosition(),
+        m_shooterArmMotor.getVelocity(),
+        m_shooterArmMotor.getMotorVoltage());
+
+        /* Optimize out the other signals, since they're not useful for SysId */
+        m_shooterArmMotor.optimizeBusUtilization();
+      }
  }

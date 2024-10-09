@@ -6,7 +6,7 @@ public interface ShooterConstants {
     int DOWN_MOTOR_ID = 33; 
 
     double MINIMUM_ERROR = 5;
-    double YEET_CURRENT = 20; //find value
+    double YEET_CURRENT = 35; //find value
 
     // upper motor constants
     int UP_MOTOR_CURRENT_LIMIT = 40;
@@ -31,9 +31,9 @@ public interface ShooterConstants {
     int MAX_ERROR = 2;
 
     // PID values for up motor
-    double UP_KP = 0.45;
-    double UP_KD = 0.3;
-    double UP_KS = 0.4586;//0.16
+    double UP_KP = 0.2;
+    double UP_KD = 0;
+    double UP_KS = 0.4586;
     double UP_KV = 0.064518;
     double UP_KA = 0.24784;
 
@@ -51,6 +51,6 @@ public interface ShooterConstants {
     double AMP_SPEED = 23;
     
     // Speed Values
-    double BASE_SPEED = 0; //TODO: find value 
+    double BASE_SPEED = 50; //TODO: find value 
 
 }

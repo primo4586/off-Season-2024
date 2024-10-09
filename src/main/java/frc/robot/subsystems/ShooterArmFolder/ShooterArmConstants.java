@@ -16,14 +16,13 @@ public interface ShooterArmConstants {
     double MM_ACCELERATION = 300;
     double MM_JERK = 1600;
 
-    //TODO find values
-    double KP = 0;
+    double KP = 0.35;
     double KD = 0;
     double KS  = 0;
     double KA = 0;
     double KV = 0;
 
-    double PEAK_CURRENT = 50; //TODO find value
+    double PEAK_CURRENT = 50;
 
     double FOWORD_LIMIT = 80; //TODO find value
     double BACKWARD_LIMIT = -1;//TODO find value
@@ -40,7 +39,7 @@ public interface ShooterArmConstants {
     double MINIMUM_ERROR = 1; //TODO find value
     double RESET_SPEED = -0.1; //TODO find value
 
-    double BASE_ANGLE = 0; //TODO: find value
+    double BASE_ANGLE = 60; //TODO: find value
 
     double RESET_SHOOTER_TIME_LIMIT = 10;
 

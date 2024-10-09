@@ -86,6 +86,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   }
 
 
+  
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("intake state",getSwitchCommand());
