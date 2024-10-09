@@ -63,6 +63,7 @@ public class Robot extends TimedRobot {
     LeftCamera.getLatestResult(); //latest pipleine result
     //var leftVisionEst = LeftCamera.getEstimatedGlobalPose();
     //var estPose = LeftCamera.getEstimatedGlobalPose();
+    //angle trying-
     SmartDashboard.putNumber("angle from camera:",LeftCamera.getAngleFromTarget()); 
 
     
