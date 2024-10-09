@@ -18,26 +18,31 @@ import frc.robot.subsystems.Vision.Vision_Constants;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer;  
 
   private final boolean UseLimelight = false;
-  private ObjectDetectionCamera camera = new ObjectDetectionCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
-
+  //left camera:
+  private AprilTagCamera leftCamera1  = new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
+  //right camera:
+  private AprilTagCamera rightCamera1  = new AprilTagCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
+  //note camera:
+  private ObjectDetectionCamera noteCamera1  = new ObjectDetectionCamera(Vision_Constants.K_NOTE_CAMERA_NAME);
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    //var leftVisionEst = LeftCamera.getEstimatedGlobalPose();
-    //var estPose = LeftCamera.getEstimatedGlobalPose();
+    
   }
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    System.out.println(camera.getAngleFromTarget());
-    SmartDashboard.putNumber("angle from camera:",camera.getAngleFromTarget()); 
+    System.out.println(leftCamera1.getAngleFromTarget());
 
-    
-    
+    SmartDashboard.putNumber("angle from left camera:",leftCamera1.getAngleFromTarget()); 
+    SmartDashboard.putNumber("angle from right camera:",rightCamera1.getAngleFromTarget()); 
+    SmartDashboard.putNumber("angle from note camera:",noteCamera1.getAngleFromTarget()); 
+
+
     /**
      * This example of adding Limelight is very simple and may not be sufficient for on-field use.
      * Users typically need to provide a standard deviation that scales with the distance to target
