@@ -189,7 +189,12 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
     */
    public Command moveArmTo(double degree){
     
-     return runOnce(() -> {m_shooterArmMotor.setControl(mm.withPosition(degree)); System.out.println("F U ZIV");});
+     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree)));
+   }
+
+   public Command moveArmToMedium(){
+    
+     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(MEDIUM_SHOOTER_ANGEL)));
    }
    
   public Command moveArmToBase() {

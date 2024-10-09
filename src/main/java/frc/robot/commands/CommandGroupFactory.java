@@ -18,18 +18,23 @@ public class CommandGroupFactory {
     private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
     private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
 
-    public static Command shootFromBase(){ //TODO: test it 
-        return new ParallelDeadlineGroup(Commands.waitSeconds(1.5)// waits one rio scyle
+    public static Command shootFromBase(){
+        return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)// waits one rio scyle
         .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())
         .andThen(intake.feedShooterCommand())), shooterArm.moveArmToBase(),shooter.shootFromBase());
-    
+        }
 
+    public static Command shootFromMidum(){
+        return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)// waits one rio scyle
+        .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())
+        .andThen(intake.feedShooterCommand())), shooterArm.moveArmToMedium(),shooter.shootFromBase());
         }
     
-    public static Command yeet(){ // TODO: make it work
+    public static Command yeet(){
         return new ParallelDeadlineGroup(Commands.waitSeconds(1.5).andThen(intake.feedShooterCommand()),
          shooter.setCurrentYeetCommand());
     }
+
 
     
 
