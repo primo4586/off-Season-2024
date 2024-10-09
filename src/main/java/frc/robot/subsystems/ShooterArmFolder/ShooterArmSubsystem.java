@@ -212,9 +212,11 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
  
    @Override
    public void periodic() {
-    SmartDashboard.putBoolean("shooter switch ", getReverseLimit());
-    SmartDashboard.putNumber("shooter angel ", getArmPose());
-     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Arm positon", getArmPose());
+    SmartDashboard.putNumber("arm velocity", m_shooterArmMotor.getVelocity().getValue());
+    SmartDashboard.putNumber("arm voltage", m_shooterArmMotor.getMotorVoltage().getValueAsDouble());
+    SmartDashboard.putBoolean("is arm ready", isArmReady());
+    SmartDashboard.putBoolean("arm switch", getReverseLimit());
    }
  
    private void configs(){
