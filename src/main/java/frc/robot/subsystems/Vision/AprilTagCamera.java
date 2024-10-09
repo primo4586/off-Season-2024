@@ -31,6 +31,8 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -77,6 +79,23 @@ public class AprilTagCamera implements Vision_Constants {
             lastEstTimestamp = latestTimestamp;
         return visionEst;
     }
+    /**
+     * Get if the camera is detecting an object
+     * @return true if the camera is detecting an object
+     */
+    public boolean getDetectingObject() {
+        return camera.getLatestResult().hasTargets();
+    }
+
+     /**
+     * Get the angle from the target
+     * @return the angle from the target or 0 if no target
+     */
+
+    public double getAngleFromTarget() {
+        return getDetectingObject() ? camera.getLatestResult().getBestTarget().getYaw() : 0;
+    }
+    
 
     /**
      * The standard deviations of the estimated pose from
@@ -98,12 +117,14 @@ public class AprilTagCamera implements Vision_Constants {
                 continue;
             numTags++;
             avgDist += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.getTranslation());
+    
         }
+
         if (numTags == 0)
             return estStdDevs;
         avgDist /= numTags;
         // Decrease std devs if multiple targets are visible
-        if (numTags > 1)
+        if (numTags > 1)    
             estStdDevs = K_MULTI_TAG_STD_DEVS;
         // Increase std devs based on (average) distance
         if (numTags == 1 && avgDist > 7)
