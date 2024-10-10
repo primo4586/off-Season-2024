@@ -1,8 +1,13 @@
 package frc.robot.subsystems.AMP;
 
+import com.revrobotics.CANSparkMax;
+
 public interface AmpConstants {
     int MOTOR_ID = 0;
     int ENCODER_ID = 0;
+
+    boolean INVERTED = false;
+    CANSparkMax.IdleMode IDLE_MODE = CANSparkMax.IdleMode.kBrake;
     // PID gains
     double kP = 0.1;
     double kI = 0.0;
@@ -16,7 +21,7 @@ public interface AmpConstants {
     double MAX_POSITION = 100.0;
 
     // Voltage limit
-    double VOLTAGE_LIMIT = 10.0;  // Max voltage
+    int CURRENT_LIMIT = 40;  // Max voltage
 
     // Motion Magic settings
     int CRUISE_VELOCITY = 1500;  // Adjust based on testing

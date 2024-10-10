@@ -17,10 +17,7 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
     private final CANSparkMax _armMotor;
     
     // Encoder for position feedback
-    private final CANcoder encoder;
-
-    // Talon SRX for handling the encoder input
-    private final Talon encoderTalon;
+    private final Talon encoder;
 
     private static AmpSubsystem instance;
     public static AmpSubsystem getInstance(){
@@ -31,11 +28,10 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
     }
     
 
-    private AmpSubsystem() {
-        // Initialize Spark MAX motor controller
-        _armMotor = new CANSparkMax(MOTOR_ID, MotorType.kBrushless);  // ID 1
-         encoderTalon = new Talon(ENCODER_ID);  // ID 2 for the Talon SRX controlling the encoder
-
+    private AmpSubsystem(){
+        _armMotor = new CANSparkMax(MOTOR_ID, MotorType.kBrushless);
+        encoder = new Talon(ENCODER_ID);
+        configs();
     }
 
     // Method to move the arm to a specified position using Motion Magic
@@ -66,35 +62,9 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
     }
 
     private void configs(){
-        _armMotor.restoreFactoryDefaults();
-        _armMotor.setIdleMode(IdleMode.kBrake);
-        _armMotor.setSmartCurrentLimit(40);  // Limit current to prevent overdraw
+        _armMotor.setInverted(INVERTED);
+        _armMotor.setSmartCurrentLimit(CURRENT_LIMIT);
+        _armMotor.setIdleMode(IDLE_MODE);
 
-        // Set voltage limits to avoid overdriving the motor
-        _armMotor.enableVoltageCompensation(VOLTAGE_LIMIT);
-
-        // Initialize the encoder with Talon SRX
-     MotionMagicConfigs mm = new MotionMagicConfigs();
-
-        // Set Motion Magic parameters (cruise velocity and acceleration)
-        mm.configMotionCruiseVelocity = 
-        encoderTalon.configMotionAcceleration(ACCELERATION);
-
-        // Set PID gains for Motion Magic
-        encoderTalon.config_kP(0, kP);
-        encoderTalon.config_kI(0, kI);
-        encoderTalon.config_kD(0, kD);
-
-        // Set sensor phase depending on installation
-        encoderTalon.setSensorPhase(true); // Adjust if necessary
-
-        // Set NeutralMode to brake for holding position
-        encoderTalon.setNeutralMode(NeutralModeValue.Brake);
-
-        // Limit forward and reverse positions for safety
-        encoderTalon.configForwardSoftLimitEnable(true);
-        encoderTalon.configForwardSoftLimitThreshold(MAX_POSITION);
-        encoderTalon.configReverseSoftLimitEnable(true);
-        encoderTalon.configReverseSoftLimitThreshold(MIN_POSITION);
     }
 }
