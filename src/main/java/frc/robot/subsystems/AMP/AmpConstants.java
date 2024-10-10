@@ -8,17 +8,21 @@ public interface AmpConstants {
 
     boolean INVERTED = false;
     CANSparkMax.IdleMode IDLE_MODE = CANSparkMax.IdleMode.kBrake;
+
+    double GEAR_RATIO = 1 / 70;
+    double TICKS_PER_DEGREE =  GEAR_RATIO / 360;
+
     // PID gains
     double kP = 0.1;
     double kI = 0.0;
     double kD = 0.0;
 
     // Feedforward (ks, kv) for controlling the arm movement
-    double ks = 0.2;  // Static friction gain
-    double kv = 0.1;  // Velocity gain
+    double kS = 0.2;  // Static friction gain
+    double kV = 0.1;  // Velocity gain
 
-    double MIN_POSITION = -2.0;
-    double MAX_POSITION = 100.0;
+    int MIN_POSITION = -2;
+    int MAX_POSITION = 100;
 
     // Voltage limit
     int CURRENT_LIMIT = 40;  // Max voltage

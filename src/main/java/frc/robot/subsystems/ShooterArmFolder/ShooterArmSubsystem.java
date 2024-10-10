@@ -21,7 +21,7 @@ package frc.robot.subsystems.ShooterArmFolder;
  import edu.wpi.first.wpilibj2.command.Command;
  import edu.wpi.first.wpilibj2.command.Commands;
  import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+ import frc.robot.Constants;
  
  public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmConstants{
    private TalonFX m_shooterArmMotor;
@@ -140,7 +140,7 @@ import frc.robot.Constants;
  
    private void configs(){
      // create the full MotionMagic
-     TalonFXConfiguration configuration = new TalonFXConfiguration();
+    TalonFXConfiguration configuration = new TalonFXConfiguration();
      MotionMagicConfigs mm = new MotionMagicConfigs();
  
      mm.MotionMagicCruiseVelocity = MM_CRUISE;
@@ -153,7 +153,7 @@ import frc.robot.Constants;
      configuration.Slot0.kV = KV;
      configuration.Slot0.kS = KS;
  
-   //Peeks:
+   //Peaks:
      configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
      configuration.CurrentLimits.SupplyCurrentLimit = PEAK_CURRENT;
  
