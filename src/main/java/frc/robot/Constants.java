@@ -14,8 +14,6 @@ package frc.robot;
  */
 public final class Constants {
   public static final String CAN_BUS_NAME="canBus";
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+  
 
 }
