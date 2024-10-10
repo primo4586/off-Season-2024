@@ -20,10 +20,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private final boolean UseLimelight = false;
-  private ObjectDetectionCamera camera = new ObjectDetectionCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
-
-
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
@@ -33,8 +29,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    System.out.println(camera.getAngleFromTarget());
-    SmartDashboard.putNumber("angle from camera:",camera.getAngleFromTarget()); 
 
     
     
