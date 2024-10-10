@@ -22,6 +22,8 @@ import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.TunerConstants;
 
 public class RobotContainer {
+  public static final CommandXboxController driverJoystick = new CommandXboxController(0);
+
 
   private IntakeSubsystem intake = IntakeSubsystem.getInstance();
   private ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
