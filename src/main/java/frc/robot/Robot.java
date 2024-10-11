@@ -3,6 +3,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,12 +27,15 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     //var leftVisionEst = LeftCamera.getEstimatedGlobalPose();
     //var estPose = LeftCamera.getEstimatedGlobalPose();
+            // Set the logger to log to the first flashdrive plugged in
+        SignalLogger.setPath("/media/sda1/");
+        SignalLogger.start();
   }
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
-    
+    SmartDashboard.putNumber("distance from spiker", Constants.distanceFromSpeaker.getAsDouble());
     
     /**
      * This example of adding Limelight is very simple and may not be sufficient for on-field use.

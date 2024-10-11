@@ -32,6 +32,9 @@ import edu.wpi.first.units.Velocity;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
@@ -95,6 +98,17 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
      configs();
      sysidConfigs();
    }
+
+     /**
+   * Create a command that will move the shooter arm to a specific angle based on
+   * the distance from the speaker
+   * 
+   * @param distance The distance from the speaker
+   * @return The command
+   */
+  public Command speakerAngleEterapolateCommand(DoubleSupplier distance) {
+    return run(() -> m_shooterArmMotor.setControl(mm.withPosition(SPEAKER_ANGLE_EXTERPOLATION.exterpolate(distance.getAsDouble()))));
+  }
  
     /**
      * Set the motor position

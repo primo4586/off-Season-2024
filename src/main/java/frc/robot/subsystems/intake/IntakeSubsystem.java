@@ -75,7 +75,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
     .withTimeout(COLLECT_TIMEOUT);
   }
   public Command feedBack(){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(-20)), ()-> _motor.stopMotor()).withTimeout(0.2);
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(-10)), ()-> _motor.stopMotor()).withTimeout(0.23);
   }
 
   /**

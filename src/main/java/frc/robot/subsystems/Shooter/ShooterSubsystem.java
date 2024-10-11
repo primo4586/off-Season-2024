@@ -82,7 +82,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** a command for shooting from base */
   public Command shootFromBase() {
-    return runEnd(() -> {
+    return startEnd(() -> {
       up_Motor.setControl(mm.withVelocity(BASE_SPEED));
       down_Motor.setControl(mm.withVelocity(BASE_SPEED));
     }, () -> {up_Motor.stopMotor();
@@ -91,10 +91,11 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** a command for shooting from Far */
   public Command shootFromFar() {
-    return runOnce(() -> {
+    return startEnd(() -> {
       up_Motor.setControl(mm.withVelocity(SHOOT_SPEED));
       down_Motor.setControl(mm.withVelocity(SHOOT_SPEED));
-    });
+    }, () -> {up_Motor.stopMotor();
+    down_Motor.stopMotor();} );
   }
 
   /** a command for checking if the motors are at the speed */

@@ -72,17 +72,20 @@ public class RobotContainer {
     driverController.x().whileTrue(shooterArm.setSpeed(0.2));
     driverController.b().whileTrue(shooterArm.setSpeed(-0.2));
     driverController.start().onTrue(shooterArm.prepareHomeCommand());
+    driverController.back().onTrue(CommandGroupFactory.yeet());
+
 
     driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
     driverController.leftTrigger().onTrue(CommandGroupFactory.shootFromMidum());
     // op command
-    //driverController.rightBumper().onTrue(CommandGroupFactory.yeet());
+    driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
      operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
 
     climb.setDefaultCommand(climb.setSpeedCommand(
         () -> operaController.getRightY() *- 1,
          () -> operaController.getLeftY() * -1)); // TODO: checks if works
-  }
+
+        }
 
   public RobotContainer() {
     configureBindings();
