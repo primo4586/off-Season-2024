@@ -36,7 +36,7 @@ public interface ShooterArmConstants {
     true);
 
     // Condition Constants
-    double MINIMUM_ERROR = 0.5;
+    double MINIMUM_ERROR = 1;
     double RESET_SPEED = -0.2;
 
     double BASE_ANGLE = 35.5;
