@@ -1,5 +1,7 @@
 package frc.robot.subsystems.AMP;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -21,7 +23,7 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
     private final CANSparkMax _armMotor;
     
     // Encoder for position feedback
-    private final Talon encoder;
+    private final TalonSRX encoder;
 
     //Singleton
     private static AmpSubsystem instance;
@@ -35,8 +37,7 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
 
     private AmpSubsystem(){
         _armMotor = new CANSparkMax(MOTOR_ID, MotorType.kBrushless);
-        encoder = new Talon(ENCODER_ID);
-        _armMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+        encoder = new TalonSRX(ENCODER_ID);
         configs();
     }
 
@@ -53,12 +54,12 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
 
     // Method to return the current position of the arm
     public double getPosition() {
-        return encoderTalon.getSelectedSensorPosition();
+        return encoder.getSelectedSensorPosition();
     }
 
     // Method to return the current velocity of the arm
     public double getVelocity() {
-        return encoderTalon.getSelectedSensorVelocity();
+        return encoder.getSelectedSensorVelocity();
     }
 
     @Override
@@ -69,11 +70,6 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
 
     private void configs(){
         SparkPIDController configuration = _armMotor.getPIDController();
-        MotionMagicConfigs mm = new MotionMagicConfigs();
-         
-        //motion magic
-        mm.MotionMagicCruiseVelocity = CRUISE_VELOCITY; 
-        mm.MotionMagicAcceleration = ACCELERATION;
 
         _armMotor.setInverted(INVERTED);
         _armMotor.setSmartCurrentLimit(CURRENT_LIMIT);
@@ -82,17 +78,17 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
         //PID
         
         configuration.setP(kP);
-        configuration.setI(kD);
-
+        configuration.setD(kD);
 
         // forward and backward limits 
         
         _armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, MAX_POSITION);
         _armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, MIN_POSITION);
 
-        
- 
+        encoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    }
 
-
+    public void resetToAbsultPosition(){
+        _armMotor.getEncoder().setPosition(encoder.getSelectedSensorPosition());
     }
 }
