@@ -210,7 +210,7 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
  
    @Override
    public void periodic() {
-    System.out.println(getArmPose());
+    // System.out.println(getArmPose());
     SmartDashboard.putNumber("Arm positon", getArmPose());
     SmartDashboard.putNumber("arm velocity", m_shooterArmMotor.getVelocity().getValue());
     SmartDashboard.putNumber("arm voltage", m_shooterArmMotor.getMotorVoltage().getValueAsDouble());
