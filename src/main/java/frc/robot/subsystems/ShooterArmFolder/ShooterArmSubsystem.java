@@ -10,43 +10,27 @@ import com.ctre.phoenix6.SignalLogger;
  */
 
  import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
  import com.ctre.phoenix6.configs.TalonFXConfiguration;
- import com.ctre.phoenix6.configs.TalonFXConfigurator;
- import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
+ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
  import com.ctre.phoenix6.signals.ForwardLimitValue;
  import com.ctre.phoenix6.signals.InvertedValue;
  import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.MutableMeasure;
-import edu.wpi.first.units.Velocity;
-
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.RobotState;
- import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  import edu.wpi.first.wpilibj2.command.Command;
- import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
-import static edu.wpi.first.units.MutableMeasure.mutable;
  
  public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmConstants{
    private TalonFX m_shooterArmMotor;
@@ -106,7 +90,7 @@ import static edu.wpi.first.units.MutableMeasure.mutable;
    * @param distance The distance from the speaker
    * @return The command
    */
-  public Command speakerAngleEterapolateCommand(DoubleSupplier distance) {
+  public Command speakerAngleExterapolateCommand(DoubleSupplier distance) {
     return run(() -> m_shooterArmMotor.setControl(mm.withPosition(SPEAKER_ANGLE_EXTERPOLATION.exterpolate(distance.getAsDouble()))));
   }
  

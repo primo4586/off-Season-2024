@@ -1,4 +1,4 @@
-package frc.robot.exterpolation;
+package frc.robot.util.exterpolation;
 
 public class ExterpolationPoint {
 

@@ -2,7 +2,7 @@ package frc.robot.subsystems.ShooterArmFolder;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 
-import frc.robot.exterpolation.ExterpolationMap;
+import frc.robot.util.exterpolation.ExterpolationMap;
 
 
 public interface ShooterArmConstants {
