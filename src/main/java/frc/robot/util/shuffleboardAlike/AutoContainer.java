@@ -25,9 +25,21 @@ public class AutoContainer {
 
         this.autoPaths.put("no auto", Commands.none());
 
-        this.autoPaths.put("test", TunerConstants.DriveTrain.runAuto("SM5"));
+        this.autoPaths.put("Ab1M1", TunerConstants.DriveTrain.runAuto("Ab1M1"));
 
+        this.autoPaths.put("Mb21M1", TunerConstants.DriveTrain.runAuto("Mb21M1"));
+
+        this.autoPaths.put("Mb23", TunerConstants.DriveTrain.runAuto("Mb23"));
+
+        this.autoPaths.put("Mb2M1", TunerConstants.DriveTrain.runAuto("Mb2M1"));
+
+        this.autoPaths.put("Mb2M3", TunerConstants.DriveTrain.runAuto("Mb2M3"));
         
+        this.autoPaths.put("Mb32M3", TunerConstants.DriveTrain.runAuto("Mb32M3"));
+
+        this.autoPaths.put("SM5", TunerConstants.DriveTrain.runAuto("SM5"));
+
+        this.autoPaths.put("SM4M3", TunerConstants.DriveTrain.runAuto("SM4M3"));
 
         this.autoSelector = new CommandSelector(autoPaths, PrimoShuffleboard.getInstance().getCompTabTitle());
     }

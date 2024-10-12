@@ -7,11 +7,11 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CommandGroupFactory;
@@ -89,9 +89,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
-  }
-
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    NamedCommands.registerCommand("intake", CommandGroupFactory.collectUntilNote());
+    NamedCommands.registerCommand("shoot", CommandGroupFactory.shotSpeakerCommand());
   }
 }

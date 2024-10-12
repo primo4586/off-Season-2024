@@ -34,7 +34,7 @@ public class TunerConstants {
     private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
     // The closed-loop output type to use for the drive motors;
     // This affects the PID/FF gains for the drive motors
-    private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
+    private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
     // The stator current at which the wheels start to slip;
     // TODO: This needs to be tuned to your individual robot
@@ -57,15 +57,15 @@ public class TunerConstants {
 
     // Theoretical free speed (m/s) at 12v applied output;
     // TODO: This needs to be tuned to your individual robot
-    public static final double kSpeedAt12VoltsMps = 1;//4.73;
+    public static final double kSpeedAt12VoltsMps = 5.212;
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 3.5714285714285716;
 
-    private static final double kDriveGearRatio = 6.746031746031747;
+    private static final double kDriveGearRatio = 5.9027777777777778;
     private static final double kSteerGearRatio = 21.428571428571427;
-    private static final double kWheelRadiusInches = 2;
+    private static final double kWheelRadiusInches = 4;
 
     private static final boolean kInvertLeftSide = true;
     private static final boolean kInvertRightSide = false;

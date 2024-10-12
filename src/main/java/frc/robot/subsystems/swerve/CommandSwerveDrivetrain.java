@@ -105,7 +105,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this); // Subsystem for requirements
     }
 
-    public Command followPathCommand(String pathName){
+    public Command runAuto(String pathName){
         return new PathPlannerAuto(pathName);
     }
 
