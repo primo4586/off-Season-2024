@@ -15,6 +15,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.AMP.AmpSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.subsystems.AMP.AmpSubsystem;
@@ -64,6 +69,11 @@ public class RobotContainer {
     // driverController.leftBumper().whileTrue(drivetrain.applyRequest(() -> brake));
     // //driverController.b().whileTrue(drivetrain
     //     //.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
+    AmpSubsystem.getInstance().setDefaultCommand(AmpSubsystem.getInstance().moveCommand(()->driverController.getRightY()*0.3));
+
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    // driverController.b().whileTrue(AmpSubsystem.getInstance().moveToPosition(20));
 
     // // reset the field-centric heading on left bumper press
     // driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -75,15 +85,15 @@ public class RobotContainer {
 
     // //driver command
     driverController.a().onTrue(CommandGroupFactory.collectUntilNote());
-    // driverController.x().whileTrue(shooterArm.setSpeed(0.2));
-    // driverController.b().whileTrue(shooterArm.setSpeed(-0.2));
+    driverController.x().whileTrue(shooterArm.setSpeed(0.2));
+    driverController.y().whileTrue(shooterArm.setSpeed(-0.2));
     driverController.start().onTrue(shooterArm.prepareHomeCommand());
     // driverController.back().onTrue(CommandGroupFactory.yeet());
     driverController.b().onTrue(shooterArm.moveArmTo(23));
 
 
     // driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
-    driverController.leftTrigger().onTrue(CommandGroupFactory.yeet());
+    driverController.leftTrigger().onTrue(CommandGroupFactory.Amp());
     // // op command
     // driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
     //  operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
@@ -98,8 +108,6 @@ public class RobotContainer {
     configureBindings();
     // NamedCommands.registerCommand("intake", CommandGroupFactory.collectUntilNote());
     // NamedCommands.registerCommand("shoot", CommandGroupFactory.shotSpeakerCommand());
-
-    AmpSubsystem.getInstance().setDefaultCommand(AmpSubsystem.getInstance().);
     
     NamedCommands.registerCommand("intake", Commands.none());
     NamedCommands.registerCommand("shoot", Commands.none());

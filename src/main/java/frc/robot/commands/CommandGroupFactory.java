@@ -63,6 +63,11 @@ public class CommandGroupFactory {
                                 shooter.shootFromFar());
         }
 
+        public static Command Amp() {
+                return new ParallelDeadlineGroup(Commands.waitSeconds(2).andThen(intake.feedShooterCommand()),
+                                shooter.setShooterSpeed(25));
+        }
+
         public static Command shotSpeakerCommand() {
                 return new ParallelDeadlineGroup(
                                 alignSpeakerCommand()
@@ -116,6 +121,3 @@ public class CommandGroupFactory {
 
         // TODO: add all swerve vision and interpolation commands
 }
-
-// Commands.waitUntil(() -> shooter.isAtVelocity())).andThen(() ->
-// shooter.shootFromBase().andThen(() -> intake.feedShooterCommand())));

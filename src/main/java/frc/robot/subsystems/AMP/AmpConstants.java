@@ -3,8 +3,8 @@ package frc.robot.subsystems.AMP;
 import com.revrobotics.CANSparkMax;
 
 public interface AmpConstants {
-    int MOTOR_ID = 0;
-    int ENCODER_ID = 0;
+    int MOTOR_ID = 2;
+    int ENCODER_ID = 11;
 
     boolean INVERTED = false;
     CANSparkMax.IdleMode IDLE_MODE = CANSparkMax.IdleMode.kBrake;

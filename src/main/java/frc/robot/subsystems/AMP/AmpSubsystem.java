@@ -1,5 +1,7 @@
 package frc.robot.subsystems.AMP;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
@@ -7,6 +9,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -45,6 +48,9 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
             _armMotor.getPIDController().setReference(clampedTargetPosition, ControlType.kPosition));
     }
 
+    public Command moveCommand(DoubleSupplier speed){
+        return this.run(()->_armMotor.set(speed.getAsDouble()));
+    }
     // Method to return the current position of the arm
     public double getPosition() {
         return _armMotor.getEncoder().getPosition();
@@ -54,6 +60,7 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
     public void periodic() {
         // This method will be called once per scheduler run
         // You could add dashboard output or checks here if needed
+        SmartDashboard.putNumber("amp pose", getPosition());
     }
 
     private void configs(){
@@ -74,6 +81,8 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
         _armMotor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, MIN_POSITION);
 
         _armMotor.getEncoder().setPositionConversionFactor(1/147);
+
+        _armMotor.setIdleMode(IDLE_MODE.kBrake);
 
         encoder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     }
