@@ -10,9 +10,10 @@ import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   private TalonFX _motor;
@@ -29,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   }
   /** Creates a new IntakeSubsystem. */
   private IntakeSubsystem() {
-    _motor = new TalonFX(MOTOR_ID);
+    _motor = new TalonFX(MOTOR_ID,Constants.CAN_BUS_NAME);
     _limitSwitch = new DigitalInput(LIMIT_SWITCH_ID);
     configs();
 
@@ -68,7 +69,12 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
    */
   public Command coolectUntilNoteCommand(){
-    return startEnd(() -> setCurrentCommand(),() -> stopIntakeCommand()).until(() -> getSwitchCommand());
+    return runOnce(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)))
+    .until(() -> getSwitchCommand())
+    .withTimeout(COLLECT_TIMEOUT);
+  }
+  public Command feedBack(){
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(-10)), ()-> _motor.stopMotor()).withTimeout(0.23);
   }
 
   /**
@@ -76,7 +82,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
   */
   public Command feedShooterCommand(){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME);
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT)),
+    () -> _motor.stopMotor()).
+    withTimeout(FEED_WAIT_TIME);
   }
 
   public Command feedShooterCommand(double current){
@@ -84,8 +92,12 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   }
 
 
+  
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("intake motor speed", _motor.getVelocity().getValue());
+    SmartDashboard.putNumber("intake motor current", _motor.getSupplyCurrent().getValue());
+    SmartDashboard.putBoolean("switch", getSwitchCommand());
     // This method will be called once per scheduler run
   }
   

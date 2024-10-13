@@ -1,5 +1,8 @@
 package frc.robot.subsystems.ShooterArmFolder;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.SignalLogger;
+
 /**
  * This subsystem is resposible for the "line up shot"
  * @arthur Eilon.h
@@ -7,29 +10,63 @@ package frc.robot.subsystems.ShooterArmFolder;
  */
 
  import com.ctre.phoenix6.StatusCode;
- import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
  import com.ctre.phoenix6.configs.TalonFXConfiguration;
- import com.ctre.phoenix6.configs.TalonFXConfigurator;
- import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
- import com.ctre.phoenix6.hardware.TalonFX;
+ import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
  import com.ctre.phoenix6.signals.ForwardLimitValue;
  import com.ctre.phoenix6.signals.InvertedValue;
  import com.ctre.phoenix6.signals.NeutralModeValue;
- import edu.wpi.first.wpilibj.DigitalInput;
- import edu.wpi.first.wpilibj.RobotState;
- import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import edu.wpi.first.units.Measure;
+import static edu.wpi.first.units.Units.Volts;
+
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  import edu.wpi.first.wpilibj2.command.Command;
- import edu.wpi.first.wpilibj2.command.Commands;
  import edu.wpi.first.wpilibj2.command.SubsystemBase;
- import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
  
  public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmConstants{
    private TalonFX m_shooterArmMotor;
-   private final MotionMagicExpoTorqueCurrentFOC mm = new MotionMagicExpoTorqueCurrentFOC(0);
+     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+
+  // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+
+   private final PositionVoltage mm = new PositionVoltage(0);
    private final DigitalInput m_limitSwitch = new DigitalInput(SWITCH_ID);
- 
+       private final VoltageOut m_sysIdControl = new VoltageOut(0);
+
+       private final SysIdRoutine m_upSysIdRoutine =
+       new SysIdRoutine(
+           new SysIdRoutine.Config(
+               null,         // Use default ramp rate (1 V/s)
+               Volts.of(4), // Reduce dynamic voltage to 4 to prevent brownout
+               null,          // Use default timeout (10 s)
+                                      // Log state with Phoenix SignalLogger class
+               (state)->{
+                 double velocity = m_shooterArmMotor.getVelocity().getValueAsDouble();
+                 double position = m_shooterArmMotor.getPosition().getValueAsDouble();
+                 double appliedVoltage = m_shooterArmMotor.getMotorVoltage().getValueAsDouble();
+
+                 SignalLogger.writeString("sysid_state",state.toString());
+                 SignalLogger.writeDouble("fly_wheel velocity", velocity);
+                 SignalLogger.writeDouble("fly_wheel position ", position);
+                 SignalLogger.writeDouble("fly_wheel voltage", appliedVoltage);
+
+               }),
+           new SysIdRoutine.Mechanism(
+               (Measure<Voltage> volts)-> m_shooterArmMotor.setControl(m_sysIdControl.withOutput(volts.in(Volts))),
+               null,
+               this));
    // singelton
    private static ShooterArmSubsystem instance;
+
    public static ShooterArmSubsystem getInstance(){
      if (instance == null)
        instance = new ShooterArmSubsystem();
@@ -40,9 +77,22 @@ package frc.robot.subsystems.ShooterArmFolder;
     * Constructor
     */
    private ShooterArmSubsystem() {
+      
      m_shooterArmMotor = new TalonFX(SHOOTER_ARM_ID, Constants.CAN_BUS_NAME); // crearts new motor
      configs();
+     sysidConfigs();
    }
+
+     /**
+   * Create a command that will move the shooter arm to a specific angle based on
+   * the distance from the speaker
+   * 
+   * @param distance The distance from the speaker
+   * @return The command
+   */
+  public Command speakerAngleExterapolateCommand(DoubleSupplier distance) {
+    return run(() -> m_shooterArmMotor.setControl(mm.withPosition(SPEAKER_ANGLE_EXTERPOLATION.exterpolate(distance.getAsDouble()))));
+  }
  
     /**
      * Set the motor position
@@ -77,9 +127,6 @@ package frc.robot.subsystems.ShooterArmFolder;
     * Set the speed of the motor
     * @param speed Mhe wanted speed in double
     */
-   public void setSpeed(double speed){
-     m_shooterArmMotor.set(speed);
-   }
  
    public void coast() {
      m_shooterArmMotor.setNeutralMode(NeutralModeValue.Coast);
@@ -110,32 +157,63 @@ package frc.robot.subsystems.ShooterArmFolder;
    }
    /**
     * Prepare the home command, if the reverse limit switch is pressed, do
-    * nothing, otherwise move the motor to the reverse limit switch position
-    * at a high speed and wait for the switch to be pressed
+    * nothing, otherwise move 
+    the motor to the reverse limit switch position
+    * at a high speed and wait for the switch to be pressepd
     * 
     * @return The command
     */
    public Command prepareHomeCommand() {
+      return runEnd(() -> {m_shooterArmMotor.set(RESET_SPEED); System.out.println("switch not on");}
+      ,() ->{ m_shooterArmMotor.stopMotor();
+      setPosition(0);})
+      .until(() -> getReverseLimit()).withTimeout(RESET_SHOOTER_TIME_LIMIT);
+    }
+    /* 
      return !getReverseLimit()
          ? Commands.none()
          : (runOnce(() -> m_shooterArmMotor.set(RESET_SPEED)).andThen(Commands.waitUntil(() -> !getReverseLimit())))
              .withTimeout(3);
-   }
+     */
+    public Command setSpeed(double speed){
+      return runEnd(() -> m_shooterArmMotor.set(speed),
+       () -> m_shooterArmMotor.stopMotor());
+    }
    /**
     * Move the arm to a degree
     * @param degree
     * @return
     */
    public Command moveArmTo(double degree){
+    
      return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree)));
- 
+   }
+
+   public Command moveArmToMedium(){
+    
+     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(MEDIUM_SHOOTER_ANGEL)));
    }
    
+  public Command moveArmToBase() {
+    return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
+  }
+   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_upSysIdRoutine.quasistatic(direction);
+}
+public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+;
+    return m_upSysIdRoutine.dynamic(direction);
+}  
    
  
    @Override
    public void periodic() {
-     // This method will be called once per scheduler run
+    // System.out.println(getArmPose());
+    SmartDashboard.putNumber("Arm positon", getArmPose());
+    SmartDashboard.putNumber("arm velocity", m_shooterArmMotor.getVelocity().getValue());
+    SmartDashboard.putNumber("arm voltage", m_shooterArmMotor.getMotorVoltage().getValueAsDouble());
+    SmartDashboard.putBoolean("is arm ready", isArmReady());
+    SmartDashboard.putBoolean("arm switch", getReverseLimit());
    }
  
    private void configs(){
@@ -146,6 +224,7 @@ package frc.robot.subsystems.ShooterArmFolder;
      mm.MotionMagicCruiseVelocity = MM_CRUISE;
      mm.MotionMagicAcceleration = MM_ACCELERATION;
      mm.MotionMagicJerk = MM_JERK;
+
  
      //Slot:
      configuration.Slot0.kP = KP;
@@ -153,8 +232,8 @@ package frc.robot.subsystems.ShooterArmFolder;
      configuration.Slot0.kV = KV;
      configuration.Slot0.kS = KS;
  
-   //Peaks:
-     configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+   //Peeks:
+     configuration.CurrentLimits.SupplyCurrentLimitEnable = false;
      configuration.CurrentLimits.SupplyCurrentLimit = PEAK_CURRENT;
  
  
@@ -163,9 +242,9 @@ package frc.robot.subsystems.ShooterArmFolder;
      configuration.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
      configuration.SoftwareLimitSwitch.ForwardSoftLimitThreshold = FOWORD_LIMIT;
      configuration.SoftwareLimitSwitch.ReverseSoftLimitThreshold = BACKWARD_LIMIT;
-     configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+     configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = false;
      configuration.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
-     configuration.HardwareLimitSwitch.ReverseLimitEnable = true;
+     configuration.HardwareLimitSwitch.ReverseLimitEnable = false;
  
      configuration.Feedback.SensorToMechanismRatio = TICKS_PER_DEGREE; 
      configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -182,4 +261,16 @@ package frc.robot.subsystems.ShooterArmFolder;
      if (!statusCode.isOK())
        System.out.println("Shooter Arm could not apply config, error code:" + statusCode.toString());
    }
+      /**
+      * settings for sysid
+      */
+      private void sysidConfigs(){
+        BaseStatusSignal.setUpdateFrequencyForAll(250,
+        m_shooterArmMotor.getPosition(),
+        m_shooterArmMotor.getVelocity(),
+        m_shooterArmMotor.getMotorVoltage());
+
+        /* Optimize out the other signals, since they're not useful for SysId */
+        m_shooterArmMotor.optimizeBusUtilization();
+      }
  }

@@ -8,11 +8,13 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,8 +23,10 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
   /** Creates a new ShooterSubsystem. */
   private TalonFX up_Motor;
   private TalonFX down_Motor;
-  private static final MotionMagicVelocityTorqueCurrentFOC mm = new MotionMagicVelocityTorqueCurrentFOC(0,
+  private static final MotionMagicVelocityVoltage mm = new MotionMagicVelocityVoltage(0,
       MOTION_MAGIC_ACCELERATION, true, 0.0, 0, false, false, false);
+  private TorqueCurrentFOC currentFOC = new TorqueCurrentFOC(0);
+       private final VoltageOut m_sysIdControl = new VoltageOut(0, true, false, false, false);
 
   // using a singleton
   private static ShooterSubsystem instance;
@@ -40,40 +44,52 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
     up_Motor = new TalonFX(UP_MOTOR_ID, Constants.CAN_BUS_NAME);
     down_Motor = new TalonFX(DOWN_MOTOR_ID, Constants.CAN_BUS_NAME);
     configs();
+
+  }
+
+  public Command setCurrentYeetCommand(){
+    return runEnd(() -> {
+      up_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));
+      down_Motor.setControl(currentFOC.withOutput(YEET_CURRENT));},
+      () -> {up_Motor.stopMotor(); down_Motor.stopMotor();});
   }
 
   /** a command for setting a speed to the motors */
   public Command setShooterSpeed(double speed) {
-    return runOnce(() -> {
+    return runEnd(() -> {
       up_Motor.setControl(mm.withVelocity(speed));
       down_Motor.setControl(mm.withVelocity(speed));
+    }, () -> {
+      up_Motor.stopMotor();
+      down_Motor.stopMotor();
     });
   }
+  
 
   /** a command for stopping the motors */
   public Command stopMotor() {
     return runOnce(() -> {
       up_Motor.stopMotor();
-      ;
       down_Motor.stopMotor();
-      ;
     });
   }
 
   /** a command for shooting from base */
   public Command shootFromBase() {
-    return runOnce(() -> {
-      setShooterSpeed(50);
-      ;
-    });
+    return startEnd(() -> {
+      up_Motor.setControl(mm.withVelocity(BASE_SPEED));
+      down_Motor.setControl(mm.withVelocity(BASE_SPEED));
+    }, () -> {up_Motor.stopMotor();
+    down_Motor.stopMotor();});
   }
 
   /** a command for shooting from Far */
   public Command shootFromFar() {
-    return runOnce(() -> {
-      setShooterSpeed(60);
-      ;
-    });
+    return startEnd(() -> {
+      up_Motor.setControl(mm.withVelocity(SHOOT_SPEED));
+      down_Motor.setControl(mm.withVelocity(SHOOT_SPEED));
+    }, () -> {up_Motor.stopMotor();
+    down_Motor.stopMotor();} );
   }
 
   /** a command for checking if the motors are at the speed */
@@ -82,9 +98,17 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
         && Math.abs(down_Motor.getVelocity().getValue() - mm.Velocity) < MINIMUM_ERROR;
   }
 
+
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("up motor velocity", up_Motor.getVelocity().getValue());
+    SmartDashboard.putNumber("down motor velocity", down_Motor.getVelocity().getValue());
+    SmartDashboard.putBoolean("shooter at velocity", isAtVelocity());
+    SmartDashboard.putNumber("up shooter voltage", up_Motor.getMotorVoltage().getValueAsDouble());
+    SmartDashboard.putNumber("down shooter voltage", down_Motor.getMotorVoltage().getValueAsDouble());
   }
 
   private void configs() {
@@ -149,12 +173,12 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
     // Checking if up_Motor apply configs
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
-      status = up_Motor.getConfigurator().apply(upConfigs);
-      if (status.isOK())
+      status = down_Motor.getConfigurator().apply(downConfigs);
+      status = up_Motor.getConfigurator().apply(upConfigs);  
+      if (status.isOK()) {
+        System.out.println("shooter is good");
         break;
-      System.out.println("status of upper motor configuration is not okay");
+      }
     }
-
   }
-
 }

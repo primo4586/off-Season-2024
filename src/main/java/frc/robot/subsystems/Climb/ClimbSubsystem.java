@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -27,7 +28,6 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
 
   /** Creates a new ClimbSubsystem. */
   private ClimbSubsystem() {
-    configs();
 
      /*
      create new m_motorLeft,m_motorRight
@@ -38,6 +38,7 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
      * */
     m_motorLeft = new CANSparkMax(CLIMBING_MOTOR_LEFT_ID, MotorType.kBrushless);
     m_motorRight = new CANSparkMax(CLIMBING_MOTOR_RIGHT_ID, MotorType.kBrushless);
+    configs();
 
   }
   /*
@@ -64,6 +65,13 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("left motor position", m_motorLeft.getEncoder().getPosition());
+    SmartDashboard.putNumber("right motor position", m_motorRight.getEncoder().getPosition());
+    SmartDashboard.putNumber("left motor velocity", m_motorLeft.getEncoder().getVelocity());
+    SmartDashboard.putNumber("right motor velocity", m_motorRight.getEncoder().getVelocity());
+    SmartDashboard.putNumber("left motor voltage", m_motorLeft.getAppliedOutput());
+    SmartDashboard.putNumber("right motor voltage", m_motorRight.getAppliedOutput());
 
   }
 

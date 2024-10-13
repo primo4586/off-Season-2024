@@ -2,6 +2,8 @@ package frc.robot.subsystems.ShooterArmFolder;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 
+import frc.robot.util.exterpolation.ExterpolationMap;
+
 
 public interface ShooterArmConstants {
     //Technical Constants
@@ -16,14 +18,13 @@ public interface ShooterArmConstants {
     double MM_ACCELERATION = 300;
     double MM_JERK = 1600;
 
-    //TODO find values
-    double KP = 0;
+    double KP = 0.5;
     double KD = 0;
     double KS  = 0;
     double KA = 0;
     double KV = 0;
 
-    double PEAK_CURRENT = 50; //TODO find value
+    double PEAK_CURRENT = 50;
 
     double FOWORD_LIMIT = 80; //TODO find value
     double BACKWARD_LIMIT = -1;//TODO find value
@@ -37,7 +38,24 @@ public interface ShooterArmConstants {
     true);
 
     // Condition Constants
-    double MINIMUM_ERROR = 1; //TODO find value
-    double RESET_SPEED = -0.1; //TODO find value
+    double MINIMUM_ERROR = 1;
+    double RESET_SPEED = -0.2;
+
+    double BASE_ANGLE = 35.5;
+
+    double RESET_SHOOTER_TIME_LIMIT = 10;
+    double MEDIUM_SHOOTER_ANGEL = 50;
+
+    double AMP_ANGLE = 23;
+
+    ExterpolationMap SPEAKER_ANGLE_EXTERPOLATION = new ExterpolationMap()
+            
+            .put(0.99, 41.15)
+            .put(1.45, 53.429)
+            .put(1.75, 57.868)
+            .put(2.355, 67.18)
+            .put(2.61, 71)
+            .put(3.04, 76.89)
+            .put(3.68, 79.413);
 
 }
