@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -29,13 +31,16 @@ public class RobotContainer {
   private ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
   private ShooterSubsystem shooter = ShooterSubsystem.getInstance();
 
-  private double MaxSpeed =  0.2 * TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = 3 * Math.PI;//1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+
+  private double MaxSpeed =  0.6 * TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private double MaxAngularRate = 1.5 * Math.PI;//1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController driverController = new CommandXboxController(0); // My joystick
   private final CommandXboxController operaController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+
+    private DoubleSupplier slowMode = () -> driverController.rightBumper().getAsBoolean() ? 0.35 : 1;
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -49,41 +54,41 @@ public class RobotContainer {
   private void configureBindings() {
     //swerve command
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed * slowMode.getAsDouble()) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withVelocityY(-driverController.getLeftX() * MaxSpeed * slowMode.getAsDouble()) // Drive left with negative X (left)
+            .withRotationalRate(-driverController.getRightX() * MaxAngularRate * slowMode.getAsDouble()) // Drive counterclockwise with negative X (left)
         ));
 
-    driverController.leftBumper().whileTrue(drivetrain.applyRequest(() -> brake));
-    //driverController.b().whileTrue(drivetrain
-        //.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
+    // driverController.leftBumper().whileTrue(drivetrain.applyRequest(() -> brake));
+    // //driverController.b().whileTrue(drivetrain
+    //     //.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
 
-    // reset the field-centric heading on left bumper press
-    driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    // // reset the field-centric heading on left bumper press
+    // driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
-    if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    }
-    drivetrain.registerTelemetry(logger::telemeterize);
+    // if (Utils.isSimulation()) {
+    //   drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    // }
+    // drivetrain.registerTelemetry(logger::telemeterize);
 
-    //driver command
-    driverController.a().onTrue(CommandGroupFactory.collectUntilNote());
-    driverController.x().whileTrue(shooterArm.setSpeed(0.2));
-    driverController.b().whileTrue(shooterArm.setSpeed(-0.2));
-    driverController.start().onTrue(shooterArm.prepareHomeCommand());
-    driverController.back().onTrue(CommandGroupFactory.yeet());
+    // //driver command
+    // driverController.a().onTrue(CommandGroupFactory.collectUntilNote());
+    // driverController.x().whileTrue(shooterArm.setSpeed(0.2));
+    // driverController.b().whileTrue(shooterArm.setSpeed(-0.2));
+    // driverController.start().onTrue(shooterArm.prepareHomeCommand());
+    // driverController.back().onTrue(CommandGroupFactory.yeet());
 
 
-    driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
-    driverController.leftTrigger().onTrue(CommandGroupFactory.yeet());
-    // op command
-    driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
-     operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
+    // driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
+    // driverController.leftTrigger().onTrue(CommandGroupFactory.yeet());
+    // // op command
+    // driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
+    //  operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
 
-    climb.setDefaultCommand(climb.setSpeedCommand(
-        () -> operaController.getRightY() *- 1,
-         () -> operaController.getLeftY() * -1)); // TODO: checks if works
+    // climb.setDefaultCommand(climb.setSpeedCommand(
+    //     () -> operaController.getRightY() *- 1,
+    //      () -> operaController.getLeftY() * -1)); // TODO: checks if works
 
         }
 
