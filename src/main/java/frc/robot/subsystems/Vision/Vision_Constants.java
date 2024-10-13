@@ -14,13 +14,13 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public interface Vision_Constants {
-        String K_RIGHT_CAMERA_NAME = "right Camra";
-        String K_LEFT_CAMERA_NAME = "Left Camera";
+        String K_RIGHT_CAMERA_NAME = "Left Camera";
+        String K_LEFT_CAMERA_NAME = "right Camera";
         String K_NOTE_CAMERA_NAME = "Note Camera";
         Transform3d K_RIGHT_ROBOT_TO_CAM = new Transform3d(new Translation3d(-0.16, -0.075, 0.45),
         new Rotation3d(- Units.degreesToRadians(-27.55), 0, Units.degreesToRadians(180)));
 
-        Transform3d K_LEFT_ROBOT_TO_CAM = new Transform3d(new Translation3d(-0.171, 0.316, 0.40),
+        Transform3d K_LEFT_ROBOT_TO_CAM = new Transform3d(new Translation3d(-0.171, -0.316, 0.40),
         new Rotation3d(Units.degreesToRadians(-20.2), 0, Units.degreesToRadians(180)));
 
 // The layout of the AprilTags on the field

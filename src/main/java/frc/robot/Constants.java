@@ -26,8 +26,8 @@ import frc.robot.subsystems.swerve.TunerConstants;
 public final class Constants {
   public static final String CAN_BUS_NAME = "canBus";
 
-  public static Translation2d speakerPoseBlue = new Translation2d(0, 5.54);
-  public static Translation2d speakerPoseRed = new Translation2d(16.39, 5.54);
+  public static Translation2d speakerPoseBlue = new Translation2d(0.0+0.2, 5.54);
+  public static Translation2d speakerPoseRed = new Translation2d(16.39-0.2, 5.54);
 
   public static DoubleSupplier distanceFromSpeaker = () -> TunerConstants.DriveTrain.getState().Pose.getTranslation()
       .getDistance(

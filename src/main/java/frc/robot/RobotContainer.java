@@ -30,7 +30,7 @@ public class RobotContainer {
   private ShooterSubsystem shooter = ShooterSubsystem.getInstance();
 
   private double MaxSpeed =  0.2 * TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = 0.1 * Math.PI;//1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+  private double MaxAngularRate = 3 * Math.PI;//1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController driverController = new CommandXboxController(0); // My joystick
@@ -76,7 +76,7 @@ public class RobotContainer {
 
 
     driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
-    driverController.leftTrigger().onTrue(CommandGroupFactory.shootFromMidum());
+    driverController.leftTrigger().onTrue(CommandGroupFactory.yeet());
     // op command
     driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
      operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());

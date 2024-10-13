@@ -48,12 +48,12 @@ public interface ShooterArmConstants {
 
     ExterpolationMap SPEAKER_ANGLE_EXTERPOLATION = new ExterpolationMap()
             
-            .put(1.61, 41.15)
-            .put(2.07, 53.429)
-            .put(2.37, 57.868)
-            .put(2.975, 67.18)
-            .put(3.23, 71)
-            .put(3.66, 76.89)
-            .put(4.3, 79.413);
+            .put(0.99, 41.15)
+            .put(1.45, 53.429)
+            .put(1.75, 57.868)
+            .put(2.355, 67.18)
+            .put(2.61, 71)
+            .put(3.04, 76.89)
+            .put(3.68, 79.413);
 
 }
