@@ -89,7 +89,11 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
-    NamedCommands.registerCommand("intake", CommandGroupFactory.collectUntilNote());
-    NamedCommands.registerCommand("shoot", CommandGroupFactory.shotSpeakerCommand());
+    // NamedCommands.registerCommand("intake", CommandGroupFactory.collectUntilNote());
+    // NamedCommands.registerCommand("shoot", CommandGroupFactory.shotSpeakerCommand());
+
+    
+    NamedCommands.registerCommand("intake", Commands.none());
+    NamedCommands.registerCommand("shoot", Commands.none());
   }
 }

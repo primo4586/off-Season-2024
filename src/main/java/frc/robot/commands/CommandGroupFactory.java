@@ -77,9 +77,9 @@ public class CommandGroupFactory {
 
         public static Command alignSpeakerCommand() {
 
-                PIDController headingPid = new PIDController(0.15, 0.03, 0);
+                PIDController headingPid = new PIDController(0.155, 0.0, 0);
                 headingPid.enableContinuousInput(-180, 180);
-                headingPid.setTolerance(0.3);
+                headingPid.setTolerance(0.5);
                 headingPid.setSetpoint(0);
 
                 SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric();
@@ -88,8 +88,9 @@ public class CommandGroupFactory {
                                 () -> swerve.setControl(
                                                 drive.withRotationalRate(
                                                                 headingPid.calculate(
-                                                                                calculateAngleToSpeaker().getDegrees(),
                                                                                 swerve.getState().Pose.getRotation()
+                                                                                                .getDegrees(),
+                                                                                calculateAngleToSpeaker()
                                                                                                 .getDegrees()))),
                                 swerve).until(() -> headingPid.atSetpoint()).andThen(() -> headingPid.close());
 
