@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -127,9 +128,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 this::getCurrentRobotChassisSpeeds,
                 (speeds) -> this.setControl(AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
                                                                              // robot
-                new HolonomicPathFollowerConfig(new PIDConstants(0.12, 0, 0),
-                        new PIDConstants(1, 0, 0),
-                        5,
+                new HolonomicPathFollowerConfig(new PIDConstants(2, 0, 0),
+                        new PIDConstants(2, 0, 0),
+                        4,
                         driveBaseRadius,
                         new ReplanningConfig()),
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, // Assume the path needs to be
@@ -144,6 +145,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     @Override
     public void periodic() {
+
+        SmartDashboard.putNumber("swerve vel", getState().speeds.vxMetersPerSecond);
+
         /* Periodically try to apply the operator perspective */
         /*
          * If we haven't applied the operator perspective before, then we should apply
