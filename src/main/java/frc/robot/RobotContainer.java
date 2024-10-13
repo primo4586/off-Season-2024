@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
@@ -52,25 +53,30 @@ public class RobotContainer {
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
   private void configureBindings() {
-    //swerve command
+    // swerve command
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed * slowMode.getAsDouble()) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(-driverController.getLeftX() * MaxSpeed * slowMode.getAsDouble()) // Drive left with negative X (left)
-            .withRotationalRate(-driverController.getRightX() * MaxAngularRate * slowMode.getAsDouble()) // Drive counterclockwise with negative X (left)
+        drivetrain.applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with
+            // negative Y (forward)
+            .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative
+                                                                                // X (left)
         ));
 
-    // driverController.leftBumper().whileTrue(drivetrain.applyRequest(() -> brake));
-    // //driverController.b().whileTrue(drivetrain
-    //     //.applyRequest(() -> point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
+    driverController.leftBumper().whileTrue(drivetrain.applyRequest(() ->
+    brake));
+    driverController.b().whileTrue(drivetrain
+    .applyRequest(() -> point.withModuleDirection(new
+    Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
 
-    // // reset the field-centric heading on left bumper press
-    // driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    // reset the field-centric heading on left bumper press
+    driverController.y().onTrue(drivetrain.runOnce(() ->
+    drivetrain.seedFieldRelative()));
 
-    // if (Utils.isSimulation()) {
-    //   drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    // }
-    // drivetrain.registerTelemetry(logger::telemeterize);
+    if (Utils.isSimulation()) {
+    drivetrain.seedFieldRelative(new Pose2d(new Translation2d(),
+    Rotation2d.fromDegrees(90)));
+    }
+    drivetrain.registerTelemetry(logger::telemeterize);
 
     // //driver command
     // driverController.a().onTrue(CommandGroupFactory.collectUntilNote());
@@ -79,26 +85,31 @@ public class RobotContainer {
     // driverController.start().onTrue(shooterArm.prepareHomeCommand());
     // driverController.back().onTrue(CommandGroupFactory.yeet());
 
+    driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase());
+    driverController.leftTrigger().onTrue(CommandGroupFactory.yeet());
+    // op command
+    driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
+    operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
 
-    // driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
-    // driverController.leftTrigger().onTrue(CommandGroupFactory.yeet());
-    // // op command
-    // driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
-    //  operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
+    climb.setDefaultCommand(climb.setSpeedCommand(
+    () -> operaController.getRightY() *- 1,
+    () -> operaController.getLeftY() * -1)); // TODO: checks if works
 
-    // climb.setDefaultCommand(climb.setSpeedCommand(
-    //     () -> operaController.getRightY() *- 1,
-    //      () -> operaController.getLeftY() * -1)); // TODO: checks if works
-
-        }
+  }
 
   public RobotContainer() {
     configureBindings();
-    // NamedCommands.registerCommand("intake", CommandGroupFactory.collectUntilNote());
-    // NamedCommands.registerCommand("shoot", CommandGroupFactory.shotSpeakerCommand());
+    // NamedCommands.registerCommand("intake",
+    // CommandGroupFactory.collectUntilNote());
+    // NamedCommands.registerCommand("shoot",
+    // CommandGroupFactory.shotSpeakerCommand());
 
-    
     NamedCommands.registerCommand("intake", Commands.none());
     NamedCommands.registerCommand("shoot", Commands.none());
+
+		driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+		driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+		driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+		driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
   }
 }
