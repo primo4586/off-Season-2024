@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
@@ -30,6 +31,13 @@ public class CommandGroupFactory {
         private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
         private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
         private static final CommandSwerveDrivetrain swerve = TunerConstants.DriveTrain;
+
+        public static Command passNote(){
+                return new ParallelDeadlineGroup(Commands.waitSeconds(0.02) //rio cycle
+                .andThen(alignPointCommand(Constants.passPosePoint)).andThen
+                (Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())).andThen(intake.feedShooterCommand()),
+                shooter.shootFromFar(), shooterArm.moveArmToPass());
+        }
 
         public static Command collectUntilNote() {
                 // return new
@@ -65,7 +73,7 @@ public class CommandGroupFactory {
 
         public static Command shotSpeakerCommand() {
                 return new ParallelDeadlineGroup(
-                                alignSpeakerCommand()
+                                alignPointCommand(Constants.speakerPosePoint)
                                                 .andThen(Commands.waitUntil(
                                                                 () -> shooter.isAtVelocity() && shooterArm.isArmReady())
                                                                 .andThen(intake.feedShooterCommand())),
@@ -75,7 +83,7 @@ public class CommandGroupFactory {
                                 shooter.shootFromFar());
         }
 
-        public static Command alignSpeakerCommand() {
+         public static Command alignPointCommand(Translation2d targetPoint) {
 
                 PIDController headingPid = new PIDController(0.155, 0.0, 0);
                 headingPid.enableContinuousInput(-180, 180);
@@ -90,18 +98,16 @@ public class CommandGroupFactory {
                                                                 headingPid.calculate(
                                                                                 swerve.getState().Pose.getRotation()
                                                                                                 .getDegrees(),
-                                                                                calculateAngleToSpeaker()
+                                                                                calculateAngleToPoint(targetPoint)
                                                                                                 .getDegrees()))),
                                 swerve).until(() -> headingPid.atSetpoint()).andThen(() -> headingPid.close());
 
         }
 
-        public static Rotation2d calculateAngleToSpeaker() {
+
+        public static Rotation2d calculateAngleToPoint(Translation2d targetPose) {
 
                 Pose2d currentPose = swerve.getState().Pose;
-                Translation2d targetPose = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
-                                ? Constants.speakerPoseBlue
-                                : Constants.speakerPoseRed;
 
                 // Get the difference in x and y positions
                 double dx = targetPose.getX() - currentPose.getX();
@@ -114,7 +120,22 @@ public class CommandGroupFactory {
                 return new Rotation2d(angleToTargetRadians + Units.degreesToRadians(180));
         }
 
-        // TODO: add all swerve vision and interpolation commands
+                public static Rotation2d calculateAngleToPass() {
+
+                Pose2d currentPose = swerve.getState().Pose;
+                Translation2d targetPose = Constants.passPosePoint;
+
+                // Get the difference in x and y positions
+                double dx = targetPose.getX() - currentPose.getX();
+                double dy = targetPose.getY() - currentPose.getY();
+
+                // Use atan2 to calculate the angle between the two points
+                double angleToTargetRadians = Math.atan2(dy, dx);
+
+                // Return the angle as a Rotation2d
+                return new Rotation2d(angleToTargetRadians + Units.degreesToRadians(180));
+        }
+
 }
 
 // Commands.waitUntil(() -> shooter.isAtVelocity())).andThen(() ->

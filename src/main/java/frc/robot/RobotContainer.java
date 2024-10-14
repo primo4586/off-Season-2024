@@ -21,6 +21,7 @@ import frc.robot.commands.CommandGroupFactory;
 import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
+import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.TunerConstants;
@@ -56,47 +57,55 @@ public class RobotContainer {
   private void configureBindings() {
     // swerve command
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed * slowMode.getAsDouble()) // Drive forward with
             // negative Y (forward)
-            .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative
+            .withVelocityY(-driverController.getLeftX() * MaxSpeed *  slowMode.getAsDouble()) // Drive left with negative X (left)
+            .withRotationalRate(-driverController.getRightX() * MaxAngularRate *  slowMode.getAsDouble()) // Drive counterclockwise with negative
                                                                                 // X (left)
         ));
 
     // driverController.leftBumper().whileTrue(drivetrain.applyRequest(() ->
-    // brake));
-    // driverController.b().whileTrue(drivetrain
-    // .applyRequest(() -> point.withModuleDirection(new
-    // Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
+    //   brake));
+    //   driverController.b().whileTrue(drivetrain
+    //   .applyRequest(() -> point.withModuleDirection(new
+    //   Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
 
-    // reset the field-centric heading on left bumper press
-    driverController.y().onTrue(drivetrain.runOnce(() ->
-    drivetrain.seedFieldRelative()));
+
 
     if (Utils.isSimulation()) {
     drivetrain.seedFieldRelative(new Pose2d(new Translation2d(),
     Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
+    driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.Velocity).withVelocityX(2.5)));
+    
+      // reset the field-centric heading on left bumper press
+      driverController.y().onTrue(drivetrain.runOnce(() ->
+      drivetrain.seedFieldRelative()));
 
-    // //driver command
-    // driverController.a().onTrue(CommandGroupFactory.collectUntilNote());
-    // driverController.x().whileTrue(shooterArm.setSpeed(0.2));
-    // driverController.b().whileTrue(shooterArm.setSpeed(-0.2));
-    // driverController.start().onTrue(shooterArm.prepareHomeCommand());
+    // driver command
+    driverController.a().onTrue(CommandGroupFactory.collectUntilNote());
+    driverController.start().onTrue(shooterArm.prepareHomeCommand());
     // driverController.back().onTrue(CommandGroupFactory.yeet());
 
     // driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase());
     // driverController.leftTrigger().onTrue(CommandGroupFactory.yeet());
     // op command
     driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
+    driverController.leftBumper().onTrue(CommandGroupFactory.shootFromBase());
+    driverController.rightTrigger().onTrue(CommandGroupFactory.passNote());
+    
     operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
+    operaController.rightBumper().onTrue(CommandGroupFactory.yeet());
+    operaController.povUp().whileTrue(intake.setCurrentCommand(IntakeConstants.PLAY_CURRENT)); 
+    operaController.povDown().whileTrue(intake.setCurrentCommand(-IntakeConstants.PLAY_CURRENT)); 
+
+    operaController.x().whileTrue(shooterArm.setSpeed(0.2));
+    operaController.b().whileTrue(shooterArm.setSpeed(-0.2));
 
     climb.setDefaultCommand(climb.setSpeedCommand(
     () -> operaController.getRightY() *- 1,
-    () -> operaController.getLeftY() * -1)); // TODO: checks if works
-
-    driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.Velocity).withVelocityX(2.5)));
+    () -> operaController.getLeftY() * -1));
 
   }
 
@@ -110,9 +119,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake", Commands.waitSeconds(1));
     NamedCommands.registerCommand("shoot", Commands.waitSeconds(1));
 
-		driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-		driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-		driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-		driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+		// driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+		// driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+		// driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+		// driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
   }
 }
