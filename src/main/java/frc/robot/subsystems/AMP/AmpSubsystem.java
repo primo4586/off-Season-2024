@@ -88,6 +88,6 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
     }
 
     public void resetToAbsultPosition(){
-        _armMotor.getEncoder().setPosition(encoder.getSelectedSensorPosition());
+        _armMotor.getEncoder().setPosition(0); // encoder.getSelectedSensorPosition()
     }
 }
