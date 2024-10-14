@@ -53,7 +53,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   }
 
   public Command setCurrentCommand(double current){
-    return runOnce(() -> _motor.setControl(currentFOC.withOutput(current)));
+    return runEnd(() -> _motor.setControl(currentFOC.withOutput(current)), () -> _motor.stopMotor());
   }
 
   /**
@@ -74,7 +74,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
     .withTimeout(COLLECT_TIMEOUT);
   }
   public Command feedBack(){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(-10)), ()-> _motor.stopMotor()).withTimeout(0.23);
+    return startEnd(() -> _motor.setControl(currentFOC.withOutput(-15)), ()-> _motor.stopMotor()).withTimeout(0.23);
   }
 
   /**
@@ -87,6 +87,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
     withTimeout(FEED_WAIT_TIME);
   }
 
+  
   public Command feedShooterCommand(double current){
     return startEnd(() -> _motor.setControl(currentFOC.withOutput(current)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME);
   }

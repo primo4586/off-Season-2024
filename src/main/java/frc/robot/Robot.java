@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
-    SmartDashboard.putNumber("angle to speaker", CommandGroupFactory.calculateAngleToSpeaker().getDegrees());
+    SmartDashboard.putNumber("angle to speaker", CommandGroupFactory.calculateAngleToPoint(Constants.speakerPosePoint).getDegrees());
     SmartDashboard.putNumber("distance from spiker", Constants.distanceFromSpeaker.getAsDouble());
     }
 

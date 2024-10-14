@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +20,8 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
+import frc.robot.subsystems.Vision.AprilTagCamera;
+import frc.robot.subsystems.Vision.Vision_Constants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.swerve.TunerConstants;
@@ -31,6 +34,7 @@ public class CommandGroupFactory {
         private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
         private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
         private static final CommandSwerveDrivetrain swerve = TunerConstants.DriveTrain;
+        private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
 
         public static Command passNote(){
                 return new ParallelDeadlineGroup(Commands.waitSeconds(0.02) //rio cycle
@@ -55,7 +59,9 @@ public class CommandGroupFactory {
         }
 
         public static Command prepareToShoot() {// TODO: add shooter arm
-                return new ParallelCommandGroup(shooter.shootFromFar());
+                return new ParallelCommandGroup(shooter.shootFromFar(),
+                shooterArm.speakerAngleExterapolateCommand(Constants.distanceFromSpeaker),
+                alignPointCommand(Constants.speakerPosePoint));
         }
 
         // TODO: add swerve steer

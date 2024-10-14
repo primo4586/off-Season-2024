@@ -28,21 +28,22 @@ import frc.robot.subsystems.swerve.TunerConstants;
 
 public class RobotContainer {
 
-  private IntakeSubsystem intake = IntakeSubsystem.getInstance();
+  private IntakeSubsystem 
+  intake = IntakeSubsystem.getInstance();
   private ClimbSubsystem climb = ClimbSubsystem.getInstance();
   private ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
   private ShooterSubsystem shooter = ShooterSubsystem.getInstance();
 
 
   private double MaxSpeed =  1 * TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI;//1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+  private double MaxAngularRate = 3 * Math.PI;//1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController driverController = new CommandXboxController(0); // My joystick
   private final CommandXboxController operaController = new CommandXboxController(1);
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
-    private DoubleSupplier slowMode = () -> driverController.rightBumper().getAsBoolean() ? 0.35 : 1;
+    private DoubleSupplier slowMode = () -> driverController.rightTrigger().getAsBoolean() ? 0.2 : 1;
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -72,31 +73,28 @@ public class RobotContainer {
 
 
 
-    if (Utils.isSimulation()) {
+    if (Utils.isSimulation()) 
+    {
     drivetrain.seedFieldRelative(new Pose2d(new Translation2d(),
     Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
-    driverController.rightTrigger().whileTrue(drivetrain.applyRequest(()->new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.Velocity).withVelocityX(2.5)));
     
       // reset the field-centric heading on left bumper press
       driverController.y().onTrue(drivetrain.runOnce(() ->
       drivetrain.seedFieldRelative()));
 
     // driver command
-    driverController.a().onTrue(CommandGroupFactory.collectUntilNote());
-    driverController.start().onTrue(shooterArm.prepareHomeCommand());
-    // driverController.back().onTrue(CommandGroupFactory.yeet());
+    operaController.a().onTrue(CommandGroupFactory.collectUntilNote());
+    operaController.start().onTrue(shooterArm.prepareHomeCommand());
 
-    // driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase());
-    // driverController.leftTrigger().onTrue(CommandGroupFactory.yeet());
     // op command
     driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
     driverController.leftBumper().onTrue(CommandGroupFactory.shootFromBase());
-    driverController.rightTrigger().onTrue(CommandGroupFactory.passNote());
+    driverController.leftTrigger().onTrue(CommandGroupFactory.passNote());
     
     operaController.leftBumper().whileTrue(CommandGroupFactory.prepareToShoot());
-    operaController.rightBumper().onTrue(CommandGroupFactory.yeet());
+    operaController.rightBumper().whileTrue(CommandGroupFactory.yeet());
     operaController.povUp().whileTrue(intake.setCurrentCommand(IntakeConstants.PLAY_CURRENT)); 
     operaController.povDown().whileTrue(intake.setCurrentCommand(-IntakeConstants.PLAY_CURRENT)); 
 
