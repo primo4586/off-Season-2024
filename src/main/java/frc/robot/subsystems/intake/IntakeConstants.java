@@ -9,8 +9,11 @@ public interface IntakeConstants {
     double PEAK_CURRENT = 40.0; //TODO: find Value
     NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Coast;
     InvertedValue INVERTED = InvertedValue.CounterClockwise_Positive; //check the correct direction
-    double COLLECT_CURRENT = 15; //TODO: find Value
-    double FEED_INTAKE_CURRENT = 40; //TODO: find Value
-    double FEED_WAIT_TIME = 0.5; //TODO: find Value
+    double COLLECT_CURRENT = 25; //TODO: find Value
+    double FEED_INTAKE_CURRENT = 20; //TODO: find Value
+    double FEED_WAIT_TIME = 2; //TODO: find Value
     double COLLECT_TIMEOUT = 10;
+    double PLAY_CURRENT = 20; //TODO find value
+    
+
 }

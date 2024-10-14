@@ -33,4 +33,11 @@ public final class Constants {
       .getDistance(
           DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? speakerPoseBlue
               : speakerPoseRed);
+
+    public static Translation2d passPosePoint = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
+    new Translation2d(0,0) : new Translation2d(0,0); //TODO: find Translation 2d
+
+    public static Translation2d speakerPosePoint = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
+    ? speakerPoseBlue
+    : speakerPoseRed;
 }

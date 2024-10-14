@@ -25,6 +25,8 @@ public class AutoContainer {
 
         this.autoPaths.put("no auto", Commands.none());
 
+        this.autoPaths.put("test", TunerConstants.DriveTrain.runAuto("test"));
+
         this.autoPaths.put("Ab1M1", TunerConstants.DriveTrain.runAuto("Ab1M1"));
 
         this.autoPaths.put("Mb21M1", TunerConstants.DriveTrain.runAuto("Mb21M1"));

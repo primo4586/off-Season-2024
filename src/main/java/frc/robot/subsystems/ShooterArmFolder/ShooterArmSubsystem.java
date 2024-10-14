@@ -197,6 +197,11 @@ import frc.robot.Constants;
   public Command moveArmToBase() {
     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(BASE_ANGLE)));
   }
+
+    public Command moveArmToPass() {
+    return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(Pass_ANGLE)));
+  }
+
    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_upSysIdRoutine.quasistatic(direction);
 }

@@ -11,6 +11,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
 
@@ -27,8 +28,8 @@ public class TunerConstants {
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     private static final Slot0Configs driveGains = new Slot0Configs()
-        .withKP(0.5).withKI(0).withKD(0)
-        .withKS(0).withKV(0).withKA(0);
+        .withKP(0.2).withKI(0).withKD(0)
+        .withKS(0).withKV(0.127).withKA(0);
 
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
@@ -44,8 +45,8 @@ public class TunerConstants {
     // Initial configs for the drive and steer motors and the CANcoder; these cannot be null.
     // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
     private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
-    .withOpenLoopRamps(new OpenLoopRampsConfigs().withVoltageOpenLoopRampPeriod(0.4)
-    .withDutyCycleOpenLoopRampPeriod(0.4).withTorqueOpenLoopRampPeriod(0.4));
+    .withOpenLoopRamps(new OpenLoopRampsConfigs().withVoltageOpenLoopRampPeriod(0.1)
+    .withDutyCycleOpenLoopRampPeriod(0.1).withTorqueOpenLoopRampPeriod(0.1));
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
@@ -68,7 +69,7 @@ public class TunerConstants {
 
     private static final double kDriveGearRatio = 5.9027777777777778;
     private static final double kSteerGearRatio = 21.428571428571427;
-    private static final double kWheelRadiusInches = 4;
+    private static final double kWheelRadiusInches = 2;
 
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
@@ -114,7 +115,7 @@ public class TunerConstants {
     private static final int kFrontLeftDriveMotorId = 1;
     private static final int kFrontLeftSteerMotorId = 11;
     private static final int kFrontLeftEncoderId = 5;
-    private static final double kFrontLeftEncoderOffset = 0.101318359375;
+    private static final double kFrontLeftEncoderOffset = 0.102783;
     private static final boolean kFrontLeftSteerInvert = true;
 
     private static final double kFrontLeftXPosInches = 12;
@@ -124,7 +125,7 @@ public class TunerConstants {
     private static final int kFrontRightDriveMotorId = 2;
     private static final int kFrontRightSteerMotorId = 12;
     private static final int kFrontRightEncoderId = 6;
-    private static final double kFrontRightEncoderOffset = 0.02978515625;
+    private static final double kFrontRightEncoderOffset = 0.031006;
     private static final boolean kFrontRightSteerInvert = true;
 
     private static final double kFrontRightXPosInches = 12;
@@ -134,7 +135,7 @@ public class TunerConstants {
     private static final int kBackLeftDriveMotorId = 4;
     private static final int kBackLeftSteerMotorId = 14;
     private static final int kBackLeftEncoderId = 8;
-    private static final double kBackLeftEncoderOffset = -0.20849609375;
+    private static final double kBackLeftEncoderOffset = -0.221436;
     private static final boolean kBackLeftSteerInvert = true;
 
     private static final double kBackLeftXPosInches = -12;
@@ -144,7 +145,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 3;
     private static final int kBackRightSteerMotorId = 13;
     private static final int kBackRightEncoderId = 7;
-    private static final double kBackRightEncoderOffset = 0.337646484375;
+    private static final double kBackRightEncoderOffset = 0.330322;
     private static final boolean kBackRightSteerInvert = true;
 
     private static final double kBackRightXPosInches = -12;
