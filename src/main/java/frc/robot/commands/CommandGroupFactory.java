@@ -78,8 +78,9 @@ public class CommandGroupFactory {
         }
 
         public static Command Amp() {
-                return new ParallelDeadlineGroup(Commands.waitSeconds(2).andThen(intake.feedShooterCommand()),
-                                shooter.setShooterSpeed(25));
+                return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)
+                .andThen(Commands.waitUntil(() -> shooter.isAtVelocity())).andThen(intake.feedShooterCommand()),
+                                shooter.setShooterSpeed(21.5));
         }
 
         public static Command shotSpeakerCommand() {

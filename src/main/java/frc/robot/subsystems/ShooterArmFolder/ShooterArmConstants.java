@@ -47,7 +47,7 @@ public interface ShooterArmConstants {
     double RESET_SHOOTER_TIME_LIMIT = 10;
     double MEDIUM_SHOOTER_ANGEL = 50;
 
-    double AMP_ANGLE = 23;
+    double AMP_ANGLE = 40;
 
     ExterpolationMap SPEAKER_ANGLE_EXTERPOLATION = new ExterpolationMap()
             

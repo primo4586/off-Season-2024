@@ -7,6 +7,7 @@ package frc.robot.subsystems.intake;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -19,6 +20,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   private TalonFX _motor;
   private DigitalInput _limitSwitch;
   private TorqueCurrentFOC currentFOC = new TorqueCurrentFOC(0);
+  private final VoltageOut voltageOut = new VoltageOut(0);
 
   //singelton
   private static IntakeSubsystem instance;
@@ -49,7 +51,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
    */
   public Command setCurrentCommand(){
-    return runOnce(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)));
+    return runOnce(() -> _motor.setControl(voltageOut.withOutput(COLLECT_VOLTAGE)));
   }
 
   public Command setCurrentCommand(double current){
@@ -69,12 +71,12 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
    */
   public Command coolectUntilNoteCommand(){
-    return runOnce(() -> _motor.setControl(currentFOC.withOutput(COLLECT_CURRENT)))
+    return runOnce(() -> _motor.setControl(voltageOut.withOutput(COLLECT_VOLTAGE)))
     .until(() -> getSwitchCommand())
     .withTimeout(COLLECT_TIMEOUT);
   }
   public Command feedBack(){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(-15)), ()-> _motor.stopMotor()).withTimeout(0.23);
+    return startEnd(() -> _motor.setControl(voltageOut.withOutput(-3)), ()-> _motor.stopMotor()).withTimeout(0.1);
   }
 
   /**
@@ -82,9 +84,10 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * 
   */
   public Command feedShooterCommand(){
-    return startEnd(() -> _motor.setControl(currentFOC.withOutput(FEED_INTAKE_CURRENT)),
+    return startEnd(() -> _motor.setControl(voltageOut.withOutput(FEED_INTAKE_VOLTAGE)),
     () -> _motor.stopMotor()).
     withTimeout(FEED_WAIT_TIME);
+
   }
 
   
@@ -106,9 +109,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
     // create the full MotionMagic
     TalonFXConfiguration configuration = new TalonFXConfiguration();
 
-    //Peeks
+    //Peaks
     configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    configuration.CurrentLimits.SupplyCurrentLimit = PEAK_CURRENT;
+    configuration.CurrentLimits.SupplyCurrentLimit = PEAK_VOLTAGE;
 
     //settings
     configuration.MotorOutput.NeutralMode = NEUTRAL_MODE;

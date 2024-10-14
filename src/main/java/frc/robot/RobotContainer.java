@@ -89,9 +89,9 @@ public class RobotContainer {
     driverController.y().whileTrue(shooterArm.setSpeed(-0.2));
     driverController.start().onTrue(shooterArm.prepareHomeCommand());
     // driverController.back().onTrue(CommandGroupFactory.yeet());
-    driverController.b().onTrue(shooterArm.moveArmTo(23));
-    driverController.povUp().whileTrue(AmpSubsystem.getInstance().moveCommand(() -> 0.2));
-    driverController.povDown().whileTrue(AmpSubsystem.getInstance().moveCommand(() -> -0.2));
+    driverController.b().onTrue(shooterArm.moveArmTo(39.8));
+    driverController.povUp().whileTrue(AmpSubsystem.getInstance().moveCommand(() -> -0.2));
+    driverController.povUp().whileFalse(AmpSubsystem.getInstance().moveCommand(() -> -0.02));
 
 
     // driverController.rightTrigger().onTrue(CommandGroupFactory.shootFromBase()); 
