@@ -95,7 +95,7 @@ public class RobotContainer {
 
     operaController.x().whileTrue(shooterArm.setSpeed(0.2));
     operaController.b().whileTrue(shooterArm.setSpeed(-0.2));
-    operaController.back().onTrue(CommandGroupFactory.Amp());
+    operaController.y().onTrue(CommandGroupFactory.Amp());
 
     climb.setDefaultCommand(climb.setSpeedCommand(
     () -> operaController.getRightY() *- 1,
