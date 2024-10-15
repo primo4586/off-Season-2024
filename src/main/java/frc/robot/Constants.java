@@ -35,7 +35,7 @@ public final class Constants {
               : speakerPoseRed);
 
     public static Translation2d passPosePoint = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ?
-    new Translation2d(0,0) : new Translation2d(0,0); //TODO: find Translation 2d
+    new Translation2d(7.6,1.2) : new Translation2d(16.39-7.6,1.2); //TODO: find Translation 2d
 
     public static Translation2d speakerPosePoint = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
     ? speakerPoseBlue

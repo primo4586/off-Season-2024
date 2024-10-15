@@ -13,7 +13,7 @@ public interface IntakeConstants {
     double FEED_INTAKE_VOLTAGE = 10; //TODO: find Value
     double FEED_WAIT_TIME = 2; //TODO: find Value
     double COLLECT_TIMEOUT = 10;
-    double PLAY_VOLTAGE = 4; //TODO find value
+    double PLAY_CURRNET = 20; //TODO find value
     
 
 }

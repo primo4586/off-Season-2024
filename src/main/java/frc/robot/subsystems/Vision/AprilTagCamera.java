@@ -172,6 +172,13 @@
              return null;
          return visionSim.getDebugField();
      }
+
+     public boolean seeTarget(){
+        var visionEst = photonEstimator.update();
+         double latestTimestamp = camera.getLatestResult().getTimestampSeconds();
+         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-5;
+         return newResult;
+     }
  
      
  }

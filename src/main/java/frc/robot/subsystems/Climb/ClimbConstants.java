@@ -5,7 +5,6 @@ package frc.robot.subsystems.Climb;
 
 /**all climbing constants */
 public interface ClimbConstants {
-    //TODO: motors id
     int CLIMBING_MOTOR_RIGHT_ID = 5;
     int CLIMBING_MOTOR_LEFT_ID = 6;
     int CURRENT_LIMIT = 40;

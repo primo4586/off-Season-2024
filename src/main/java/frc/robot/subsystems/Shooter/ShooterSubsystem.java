@@ -56,17 +56,17 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** a command for setting a speed to the motors */
   public Command setShooterSpeed(double speed) {
-    return runOnce(() -> {
-     up_Motor.setControl(mm.withVelocity(speed));
-     down_Motor.setControl(mm.withVelocity(speed));
-     });
-    // return startEnd(() -> {
-    //   up_Motor.setControl(mm.withVelocity(speed));
-    //   down_Motor.setControl(mm.withVelocity(speed));
-    // }, () -> {
-    //   up_Motor.stopMotor();
-    //   down_Motor.stopMotor();
-    // });
+    // return runOnce(() -> {
+    //  up_Motor.setControl(mm.withVelocity(speed));
+    //  down_Motor.setControl(mm.withVelocity(speed));
+    //  });
+    return startEnd(() -> {
+      up_Motor.setControl(mm.withVelocity(speed));
+      down_Motor.setControl(mm.withVelocity(speed));
+    }, () -> {
+      up_Motor.stopMotor();
+      down_Motor.stopMotor();
+    });
   }
   
 
