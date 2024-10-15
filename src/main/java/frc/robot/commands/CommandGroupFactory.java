@@ -82,8 +82,7 @@ public class CommandGroupFactory {
 
         public static Command prepareToShoot() {// TODO: add shooter arm
                 return new ParallelCommandGroup(shooter.shootFromFar(),
-                shooterArm.speakerAngleExterapolateCommand(Constants.distanceFromSpeaker),
-                alignPointCommand(Constants.speakerPosePoint), driveSwerve());
+                shooterArm.speakerAngleExterapolateCommand(Constants.distanceFromSpeaker));
         }
 
         // TODO: add swerve steer
@@ -110,12 +109,12 @@ public class CommandGroupFactory {
                 Commands.waitSeconds(0.02)// roi sycle 
                                 
                                                 .andThen(Commands.waitUntil(
-                                                                () -> shooter.isAtVelocity() && shooterArm.isArmReady())
+                                                                () -> shooter.isAtVelocity() && shooterArm.isArmReady()).withTimeout(3)
                                                                 .andThen(intake.feedShooterCommand())),
 
                                 shooterArm.speakerAngleExterapolateCommand(Constants.distanceFromSpeaker),
 
-                                shooter.shootFromFar(), driveSwerve());
+                                shooter.shootFromFar());
         }
 
          public static Command alignPointCommand(Translation2d targetPoint) {

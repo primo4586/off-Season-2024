@@ -11,7 +11,7 @@ public interface IntakeConstants {
     InvertedValue INVERTED = InvertedValue.CounterClockwise_Positive; //check the correct direction
     double COLLECT_VOLTAGE = 6; //TODO: find Value
     double FEED_INTAKE_VOLTAGE = 10; //TODO: find Value
-    double FEED_WAIT_TIME = 2; //TODO: find Value
+    double FEED_WAIT_TIME = 1; //TODO: find Value
     double COLLECT_TIMEOUT = 10;
     double PLAY_CURRNET = 20; //TODO find value
     
