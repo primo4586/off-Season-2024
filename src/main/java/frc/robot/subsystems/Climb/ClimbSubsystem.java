@@ -66,12 +66,8 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("left motor position", m_motorLeft.getEncoder().getPosition());
-    SmartDashboard.putNumber("right motor position", m_motorRight.getEncoder().getPosition());
-    SmartDashboard.putNumber("left motor velocity", m_motorLeft.getEncoder().getVelocity());
-    SmartDashboard.putNumber("right motor velocity", m_motorRight.getEncoder().getVelocity());
-    SmartDashboard.putNumber("left motor voltage", m_motorLeft.getAppliedOutput());
-    SmartDashboard.putNumber("right motor voltage", m_motorRight.getAppliedOutput());
+    SmartDashboard.putNumber("climb left motor position", m_motorLeft.getEncoder().getPosition());
+    SmartDashboard.putNumber("climb right motor position", m_motorRight.getEncoder().getPosition());
 
   }
 
