@@ -48,10 +48,8 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
     public Command setSpeedCommand(DoubleSupplier speedMotorRight){
     return run(() -> {m_motorLeft.set(speedMotorRight.getAsDouble());
     m_motorRight.set(speedMotorRight.getAsDouble());});
- 
   }
  
-
   /*
    * command - set different speed to motors
    * @param speedMotorLeft.getAsDouble() set this speed to motor left

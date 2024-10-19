@@ -18,15 +18,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants;
+import frc.robot.Misc;
 import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
 import frc.robot.subsystems.Vision.AprilTagCamera;
-import frc.robot.subsystems.Vision.ObjectDetectionCamera;
 import frc.robot.subsystems.Vision.Vision_Constants;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -37,15 +35,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 public class CommandGroupFactory {
         private static double MaxSpeed =  1 * TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
         private static double MaxAngularRate = 3 * Math.PI;//1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
-
         private static final IntakeSubsystem intake = IntakeSubsystem.getInstance();
         private static final ClimbSubsystem climb = ClimbSubsystem.getInstance();
         private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
         private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
         private static final CommandSwerveDrivetrain swerve = TunerConstants.DriveTrain;
         private static AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
-        private static ObjectDetectionCamera noteCamera = new ObjectDetectionCamera(Vision_Constants.K_NOTE_CAMERA_NAME);
-
         private final static CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
         private final static CommandXboxController driverController = new CommandXboxController(0); // My joystick
         private final static SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -54,6 +49,7 @@ public class CommandGroupFactory {
         private static DoubleSupplier slowMode = () -> driverController.rightTrigger().getAsBoolean() ? 0.2 : 1;
 
         public static Command driveSwerve(){
+         // Drivetrain will execute this command periodically
                 return drivetrain.applyRequest(() -> drive.withVelocityX(-driverController.getLeftY() * MaxSpeed * slowMode.getAsDouble()) // Drive forward with
                     // negative Y (forward)
                     .withVelocityY(-driverController.getLeftX() * MaxSpeed *  slowMode.getAsDouble()) // Drive left with negative X (left)
@@ -64,14 +60,11 @@ public class CommandGroupFactory {
 
         public static Command passNote(){
                 return new ParallelDeadlineGroup(Commands.waitSeconds(0.02) //rio cycle
-                .andThen(alignCommand(calculateAngleToPoint(Constants.passPosePoint))).andThen
+                .andThen(alignPointCommand(Misc.passPosePoint)).andThen
                 (Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())).andThen(intake.feedShooterCommand()),
                 shooter.shootFromFar(), shooterArm.moveArmToPass());
         }
 
-        public static Command  alignToNote(){
-                return noteCamera.getDetectingObject() ? alignCommand(new Rotation2d(noteCamera.getAngleFromTarget())) : Commands.none();
-        }
         public static Command collectUntilNote() {
                 // return new
                 // SequentialCommandGroup(intake.coolectUntilNoteCommand(),intake.feedBack());
@@ -89,7 +82,7 @@ public class CommandGroupFactory {
 
         public static Command prepareToShoot() {// TODO: add shooter arm
                 return new ParallelCommandGroup(shooter.shootFromFar(),
-                shooterArm.speakerAngleExterapolateCommand(Constants.distanceFromSpeaker));
+                shooterArm.speakerAngleExterapolateCommand(Misc.distanceFromSpeaker));
         }
 
         // TODO: add swerve steer
@@ -100,32 +93,31 @@ public class CommandGroupFactory {
                                 shooterArm.moveArmToMedium(), shooter.shootFromBase());
         }
 
+
         public static Command yeet() {
                 return new ParallelDeadlineGroup(Commands.waitSeconds(2).andThen(intake.feedShooterCommand()),
                                 shooter.shootFromFar());
         }
 
         public static Command Amp() {
-                return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)
-                .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady()))
-                .andThen(Commands.waitSeconds(0.2)).andThen(intake.feedShooterCommand()),
+                return new ParallelDeadlineGroup(Commands.waitSeconds(0.5)
+                .andThen(Commands.waitUntil(() -> shooter.isAtVelocity() && shooterArm.isArmReady())).andThen(intake.feedShooterCommand()),
                                 shooter.setShooterSpeed(21.5), shooterArm.moveArmTo(40));
         }
 
         public static Command shotSpeakerCommand() {
-                return new ParallelDeadlineGroup( leftAprilTagCamera.seeTarget() ? alignCommand(calculateAngleToPoint(Constants.speakerPosePoint)) :
-                Commands.waitSeconds(0.02)// roi sycle 
+                return new ParallelDeadlineGroup( alignPointCommand(Misc.speakerPosePoint)
                                 
                                                 .andThen(Commands.waitUntil(
                                                                 () -> shooter.isAtVelocity() && shooterArm.isArmReady()).withTimeout(3)
                                                                 .andThen(intake.feedShooterCommand())),
 
-                                shooterArm.speakerAngleExterapolateCommand(Constants.distanceFromSpeaker),
+                                shooterArm.speakerAngleExterapolateCommand(Misc.distanceFromSpeaker),
 
                                 shooter.shootFromFar());
         }
 
-         public static Command alignCommand(Rotation2d target) {
+         public static Command alignPointCommand(Translation2d targetPoint) {
 
                 PIDController headingPid = new PIDController(0.155, 0.0, 0);
                 headingPid.enableContinuousInput(-180, 180);
@@ -140,7 +132,7 @@ public class CommandGroupFactory {
                                                                 headingPid.calculate(
                                                                                 swerve.getState().Pose.getRotation()
                                                                                                 .getDegrees(),
-                                                                                                target
+                                                                                calculateAngleToPoint(targetPoint)
                                                                                                 .getDegrees()))),
                                 swerve).until(() -> headingPid.atSetpoint()).andThen(() -> headingPid.close());
 
@@ -165,7 +157,7 @@ public class CommandGroupFactory {
                 public static Rotation2d calculateAngleToPass() {
 
                 Pose2d currentPose = swerve.getState().Pose;
-                Translation2d targetPose = Constants.passPosePoint;
+                Translation2d targetPose = Misc.passPosePoint;
 
                 // Get the difference in x and y positions
                 double dx = targetPose.getX() - currentPose.getX();

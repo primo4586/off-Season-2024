@@ -17,7 +17,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Misc;
 
 public class ShooterSubsystem extends SubsystemBase implements ShooterConstants {
   /** Creates a new ShooterSubsystem. */
@@ -41,8 +41,8 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants 
 
   /** finding the motors mased on the id and can-bus name */
   private ShooterSubsystem() {
-    up_Motor = new TalonFX(UP_MOTOR_ID, Constants.CAN_BUS_NAME);
-    down_Motor = new TalonFX(DOWN_MOTOR_ID, Constants.CAN_BUS_NAME);
+    up_Motor = new TalonFX(UP_MOTOR_ID, Misc.CAN_BUS_NAME);
+    down_Motor = new TalonFX(DOWN_MOTOR_ID, Misc.CAN_BUS_NAME);
     configs();
 
   }

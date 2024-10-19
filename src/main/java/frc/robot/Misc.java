@@ -23,7 +23,7 @@ import frc.robot.subsystems.swerve.TunerConstants;
  * wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class Misc {
   public static final String CAN_BUS_NAME = "canBus";
 
   public static Translation2d speakerPoseBlue = new Translation2d(0.0+0.2, 5.54);

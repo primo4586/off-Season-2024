@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Misc;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   private TalonFX _motor;
@@ -32,7 +32,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   }
   /** Creates a new IntakeSubsystem. */
   private IntakeSubsystem() {
-    _motor = new TalonFX(MOTOR_ID,Constants.CAN_BUS_NAME);
+    _motor = new TalonFX(MOTOR_ID,Misc.CAN_BUS_NAME);
     _limitSwitch = new DigitalInput(LIMIT_SWITCH_ID);
     configs();
 
@@ -89,14 +89,11 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
     withTimeout(FEED_WAIT_TIME);
 
   }
-
   
   public Command feedShooterCommand(double current){
     return startEnd(() -> _motor.setControl(currentFOC.withOutput(current)),() -> stopIntakeCommand()).withTimeout(FEED_WAIT_TIME);
   }
 
-
-  
   @Override
   public void periodic() {
     SmartDashboard.putNumber("intake motor speed", _motor.getVelocity().getValue());

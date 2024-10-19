@@ -18,7 +18,7 @@ public interface ShooterArmConstants {
     double MM_ACCELERATION = 300;
     double MM_JERK = 1600;
 
-    double KP = 0.5;
+    double KP = 0.7;
     double KD = 0;
     double KS  = 0;
     double KA = 0;
@@ -38,7 +38,7 @@ public interface ShooterArmConstants {
     true);
 
     // Condition Constants
-    double MINIMUM_ERROR = 1;
+    double MINIMUM_ERROR = 0.5;
     double RESET_SPEED = -0.2;
 
     double BASE_ANGLE = 35.5;
@@ -51,12 +51,12 @@ public interface ShooterArmConstants {
 
     ExterpolationMap SPEAKER_ANGLE_EXTERPOLATION = new ExterpolationMap()
             
-            .put(0.99, 41.15)
+            .put(1, 40.5)
             .put(1.45, 53.429)
-            .put(1.75, 57.868)
-            .put(2.355, 67.18)
-            .put(2.61, 71)
-            .put(3.04, 76.89)
+            .put(1.768, 52.820)
+            .put(2.358, 66.69)
+            .put(2.64, 71.88)
+            .put(2.98, 76.448)
             .put(3.68, 79.413);
 
 }

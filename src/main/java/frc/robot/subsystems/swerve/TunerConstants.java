@@ -45,8 +45,8 @@ public class TunerConstants {
     // Initial configs for the drive and steer motors and the CANcoder; these cannot be null.
     // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
     private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
-    .withOpenLoopRamps(new OpenLoopRampsConfigs().withVoltageOpenLoopRampPeriod(0.15)
-    .withDutyCycleOpenLoopRampPeriod(0.15).withTorqueOpenLoopRampPeriod(0.15));
+    .withOpenLoopRamps(new OpenLoopRampsConfigs().withVoltageOpenLoopRampPeriod(0.25)
+    .withDutyCycleOpenLoopRampPeriod(0.25).withTorqueOpenLoopRampPeriod(0.25));
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()

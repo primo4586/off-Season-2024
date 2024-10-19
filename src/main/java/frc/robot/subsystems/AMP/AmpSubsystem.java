@@ -31,7 +31,6 @@ public class AmpSubsystem extends SubsystemBase implements AmpConstants{
       return instance;
     }
     
-
     private AmpSubsystem(){
         _armMotor = new CANSparkMax(MOTOR_ID, MotorType.kBrushless);
         encoder = new TalonSRX(ENCODER_ID);

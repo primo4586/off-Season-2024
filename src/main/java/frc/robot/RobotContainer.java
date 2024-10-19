@@ -98,8 +98,8 @@ public class RobotContainer {
     operaController.y().onTrue(CommandGroupFactory.Amp());
 
     climb.setDefaultCommand(climb.setSpeedCommand(
-    () -> operaController.getRightY() *- 1,
-    () -> operaController.getLeftY() * -1));
+    () -> operaController.getRightY(),
+    () -> operaController.getLeftY()));
 
   }
 

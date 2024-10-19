@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  import edu.wpi.first.wpilibj2.command.Command;
  import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
+import frc.robot.Misc;
  
  public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmConstants{
    private TalonFX m_shooterArmMotor;
@@ -78,9 +78,10 @@ import frc.robot.Constants;
     */
    private ShooterArmSubsystem() {
       
-     m_shooterArmMotor = new TalonFX(SHOOTER_ARM_ID, Constants.CAN_BUS_NAME); // crearts new motor
+     m_shooterArmMotor = new TalonFX(SHOOTER_ARM_ID, Misc.CAN_BUS_NAME); // crearts new motor
      configs();
      sysidConfigs();
+     setPosition(0); // very smart very damure
    }
 
      /**
