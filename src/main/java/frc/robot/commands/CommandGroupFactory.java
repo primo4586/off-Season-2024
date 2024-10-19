@@ -40,7 +40,6 @@ public class CommandGroupFactory {
         private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
         private static final ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
         private static final CommandSwerveDrivetrain swerve = TunerConstants.DriveTrain;
-        private static AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
         private final static CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
         private final static CommandXboxController driverController = new CommandXboxController(0); // My joystick
         private final static SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -109,7 +108,7 @@ public class CommandGroupFactory {
                 return new ParallelDeadlineGroup( alignPointCommand(Misc.speakerPosePoint)
                                 
                                                 .andThen(Commands.waitUntil(
-                                                                () -> shooter.isAtVelocity() && shooterArm.isArmReady()).withTimeout(3)
+                                                                () -> shooter.isAtVelocity() && shooterArm.isArmReady()).withTimeout(1.5)
                                                                 .andThen(intake.feedShooterCommand())),
 
                                 shooterArm.speakerAngleExterapolateCommand(Misc.distanceFromSpeaker),

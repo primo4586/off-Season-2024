@@ -67,17 +67,12 @@ public class RobotContainer {
     //   Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))));
 
 
-
-    if (Utils.isSimulation()) 
-    {
-    drivetrain.seedFieldRelative(new Pose2d(new Translation2d(),
-    Rotation2d.fromDegrees(90)));
-    }
-    drivetrain.registerTelemetry(logger::telemeterize);
-    
       // reset the field-centric heading on left bumper press
       driverController.y().onTrue(drivetrain.runOnce(() ->
       drivetrain.seedFieldRelative()));
+    drivetrain.registerTelemetry(logger::telemeterize);
+    
+
 
     // op command
     driverController.rightBumper().onTrue(CommandGroupFactory.shotSpeakerCommand());
@@ -97,21 +92,21 @@ public class RobotContainer {
     operaController.b().whileTrue(shooterArm.setSpeed(-0.2));
     operaController.y().onTrue(CommandGroupFactory.Amp());
 
-    climb.setDefaultCommand(climb.setSpeedCommand(
-    () -> operaController.getRightY(),
-    () -> operaController.getLeftY()));
+    // climb.setDefaultCommand(climb.setSpeedCommand(
+    // () -> operaController.getRightY(),
+    // () -> operaController.getLeftY()));
 
   }
 
   public RobotContainer() {
     configureBindings();
-    // NamedCommands.registerCommand("intake",
-    // CommandGroupFactory.collectUntilNote());
-    // NamedCommands.registerCommand("shoot",
-    // CommandGroupFactory.shotSpeakerCommand());
+    NamedCommands.registerCommand("intake",
+    CommandGroupFactory.collectUntilNote());
+    NamedCommands.registerCommand("shoot",
+    CommandGroupFactory.shotSpeakerCommand());
+    NamedCommands.registerCommand("shootFromBase",
+    CommandGroupFactory.shootFromBase());
 
-    NamedCommands.registerCommand("intake", Commands.waitSeconds(1));
-    NamedCommands.registerCommand("shoot", Commands.waitSeconds(1));
 
 		// driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
 		// driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));

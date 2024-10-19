@@ -38,8 +38,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    private AprilTagCamera rightAprilTagCamera = new AprilTagCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
-    private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
+    private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
+    // private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
@@ -175,8 +175,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
 
         // Correct pose estimate with vision measurements
-        var rightVisionEst = rightAprilTagCamera.getEstimatedGlobalPose();
-        rightVisionEst.ifPresent(
+        var leftVisionEst = leftAprilTagCamera.getEstimatedGlobalPose();
+        leftVisionEst.ifPresent(
                 rightEst -> {
                     var estPose = rightEst.estimatedPose.toPose2d();
 
@@ -184,22 +184,22 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                             new double[] { estPose.getX(), estPose.getY(), estPose.getRotation().getDegrees() });
 
                     // Change our trust in the measurement based on the tags we can see
-                    var estStdDevs = rightAprilTagCamera.getEstimationStdDevs(estPose);
+                    var estStdDevs = leftAprilTagCamera.getEstimationStdDevs(estPose);
                     this.addVisionMeasurement(rightEst.estimatedPose.toPose2d(), rightEst.timestampSeconds, estStdDevs);
                 });
 
-        var leftVisionEst = leftAprilTagCamera.getEstimatedGlobalPose();
-        leftVisionEst.ifPresent(
-                leftEst -> {
-                    var estPose = leftEst.estimatedPose.toPose2d();
+    //     var leftVisionEst = leftAprilTagCamera.getEstimatedGlobalPose();
+    //     leftVisionEst.ifPresent(
+    //             leftEst -> {
+    //                 var estPose = leftEst.estimatedPose.toPose2d();
 
-                    SignalLogger.writeDoubleArray("left camera pose",
-                            new double[] { estPose.getX(), estPose.getY(), estPose.getRotation().getDegrees() });
+    //                 SignalLogger.writeDoubleArray("left camera pose",
+    //                         new double[] { estPose.getX(), estPose.getY(), estPose.getRotation().getDegrees() });
 
-                    // Change our trust in the measurement based on the tags we can see
-                    var estStdDevs = leftAprilTagCamera.getEstimationStdDevs(estPose);
+    //                 // Change our trust in the measurement based on the tags we can see
+    //                 var estStdDevs = leftAprilTagCamera.getEstimationStdDevs(estPose);
 
-                    this.addVisionMeasurement(leftEst.estimatedPose.toPose2d(), leftEst.timestampSeconds, estStdDevs);
-                });
+    //                 this.addVisionMeasurement(leftEst.estimatedPose.toPose2d(), leftEst.timestampSeconds, estStdDevs);
+    //             });
     }
 }

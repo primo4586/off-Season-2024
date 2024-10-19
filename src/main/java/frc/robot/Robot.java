@@ -24,9 +24,9 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     autoContainer = new AutoContainer();
 
-    TunerConstants.DriveTrain.getDaqThread().setThreadPriority(99);
-        SignalLogger.setPath("/media/sda1/");
-        SignalLogger.start();
+    // TunerConstants.DriveTrain.getDaqThread().setThreadPriority(99);
+    //     SignalLogger.setPath("/media/sda1/");
+        // SignalLogger.start();
   }
   @Override
   public void robotPeriodic() {

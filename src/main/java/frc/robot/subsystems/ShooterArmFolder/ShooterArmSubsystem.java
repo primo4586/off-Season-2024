@@ -253,7 +253,7 @@ public Command sysIdDynamic(SysIdRoutine.Direction direction) {
      configuration.HardwareLimitSwitch.ReverseLimitEnable = false;
  
      configuration.Feedback.SensorToMechanismRatio = TICKS_PER_DEGREE; 
-     configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+     configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
      configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
      StatusCode statusCode = StatusCode.StatusCodeNotInitialized;
  
