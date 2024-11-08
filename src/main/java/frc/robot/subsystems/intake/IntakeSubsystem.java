@@ -42,7 +42,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * returns the state of the switch
    * 
    */
-  public boolean getSwitchCommand(){
+  public boolean getSwitch(){
     return _limitSwitch.get();
   }
 
@@ -72,7 +72,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    */
   public Command coolectUntilNoteCommand(){
     return runOnce(() -> _motor.setControl(voltageOut.withOutput(COLLECT_VOLTAGE)))
-    .until(() -> getSwitchCommand())
+    .until(() -> getSwitch())
     .withTimeout(COLLECT_TIMEOUT);
   }
   public Command feedBack(){
@@ -96,8 +96,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("intake motor speed", _motor.getVelocity().getValue());
-    SmartDashboard.putBoolean("switch", getSwitchCommand());
+    SmartDashboard.putBoolean("Note switch", getSwitch());
     // This method will be called once per scheduler run
   }
   

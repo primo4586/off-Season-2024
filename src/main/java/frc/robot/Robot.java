@@ -10,30 +10,35 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandGroupFactory;
+import frc.robot.subsystems.SmartDashBoardSubsysytem;
+import frc.robot.subsystems.Vision.AprilTagCamera;
+import frc.robot.subsystems.Vision.Vision_Constants;
 import frc.robot.subsystems.swerve.TunerConstants;
 import frc.robot.util.shuffleboardAlike.AutoContainer;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
+  
   private RobotContainer m_robotContainer;
   private AutoContainer autoContainer;
+
+  private AprilTagCamera vision;
+  
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     autoContainer = new AutoContainer();
 
+    
+
     // TunerConstants.DriveTrain.getDaqThread().setThreadPriority(99);
     //     SignalLogger.setPath("/media/sda1/");
         // SignalLogger.start();
   }
-  @Override
+  @Override //0.02
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
-    SmartDashboard.putNumber("angle to speaker", CommandGroupFactory.calculateAngleToPoint(Misc.speakerPosePoint).getDegrees());
-    SmartDashboard.putNumber("distance from spiker", Misc.distanceFromSpeaker.getAsDouble());
     }
 
   @Override
@@ -47,12 +52,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
     m_autonomousCommand = autoContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    SmartDashBoardSubsysytem.autoTimer();
   }
 
   @Override
@@ -68,11 +74,12 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
+    SmartDashBoardSubsysytem.teleopTimer();
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void teleopExit() {

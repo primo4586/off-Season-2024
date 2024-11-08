@@ -45,7 +45,7 @@ public class CommandGroupFactory {
         private final static SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-
-        private static DoubleSupplier slowMode = () -> driverController.rightTrigger().getAsBoolean() ? 0.2 : 1;
+        private static DoubleSupplier slowMode = () -> 1 - driverController.getHID().getLeftTriggerAxis() * 0.8;
 
         public static Command driveSwerve(){
          // Drivetrain will execute this command periodically
@@ -68,7 +68,7 @@ public class CommandGroupFactory {
                 // return new
                 // SequentialCommandGroup(intake.coolectUntilNoteCommand(),intake.feedBack());
                 return intake.setCurrentCommand()
-                                .andThen(Commands.waitUntil(() -> intake.getSwitchCommand()))
+                                .andThen(Commands.waitUntil(() -> intake.getSwitch()))
                                 .andThen(intake.feedBack());
         }
 
