@@ -96,7 +96,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Note switch", getSwitch());
     // This method will be called once per scheduler run
   }
   

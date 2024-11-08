@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.CommandGroupFactory;
-import frc.robot.subsystems.SmartDashBoardSubsysytem;
 import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.ShooterArmFolder.ShooterArmSubsystem;
@@ -34,7 +33,6 @@ public class RobotContainer {
   private ClimbSubsystem climb = ClimbSubsystem.getInstance();
   private ShooterArmSubsystem shooterArm = ShooterArmSubsystem.getInstance();
   private ShooterSubsystem shooter = ShooterSubsystem.getInstance();
-  private SmartDashBoardSubsysytem test = new SmartDashBoardSubsysytem();
 
 
   private double MaxSpeed =  1 * TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed

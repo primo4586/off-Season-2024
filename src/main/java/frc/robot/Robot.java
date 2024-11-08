@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandGroupFactory;
-import frc.robot.subsystems.SmartDashBoardSubsysytem;
 import frc.robot.subsystems.Vision.AprilTagCamera;
 import frc.robot.subsystems.Vision.Vision_Constants;
 import frc.robot.subsystems.swerve.TunerConstants;
@@ -57,8 +56,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    SmartDashBoardSubsysytem.autoTimer();
   }
 
   @Override
@@ -74,7 +71,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    SmartDashBoardSubsysytem.teleopTimer();
   }
 
   @Override
