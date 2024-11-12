@@ -1,5 +1,6 @@
 package frc.robot.SmartDashbored;
 
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Climb.ClimbSubsystem;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
@@ -15,7 +16,8 @@ public class NetworkTabels {
     private static ShooterSubsystem shooter = ShooterSubsystem.getInstance();
     private static ClimbSubsystem climb = ClimbSubsystem.getInstance();
     private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
-
+    private static Field2d m_field = new Field2d();
+    
     // clock 
     private static double _clock;
     private static double _countDown;
@@ -39,6 +41,11 @@ public class NetworkTabels {
     //intake func
     public static void intake(){
         SmartDashboard.putBoolean("Note switch", intake.getSwitch());
+    }
+
+    //field func
+    public static void setField(){
+        SmartDashboard.putData("Field", m_field);
     }
 
     //shooter func

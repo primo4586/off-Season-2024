@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.SmartDashbored.NetworkTabels;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.subsystems.Vision.AprilTagCamera;
 import frc.robot.subsystems.Vision.Vision_Constants;
@@ -28,6 +29,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     autoContainer = new AutoContainer();
+    NetworkTabels.setField();
 
     
 
@@ -38,6 +40,7 @@ public class Robot extends TimedRobot {
   @Override //0.02
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    NetworkTabels.updateValues();
     }
 
   @Override
