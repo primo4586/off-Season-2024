@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Misc;
 import frc.robot.subsystems.Vision.AprilTagCamera;
 import frc.robot.subsystems.Vision.Vision_Constants;
 
@@ -37,8 +38,8 @@ import frc.robot.subsystems.Vision.Vision_Constants;
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
-    private double m_lastSimTime;
-    private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
+    private double m_lastSimTime;   
+    private AprilTagCamera leftAprilTagCamera = Misc.LEFT_CAMERA;
     // private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */

@@ -9,6 +9,9 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.subsystems.Vision.AprilTagCamera;
+import frc.robot.subsystems.Vision.ObjectDetectionCamera;
+import frc.robot.subsystems.Vision.Vision_Constants;
 import frc.robot.subsystems.swerve.TunerConstants;
 
 /**
@@ -25,6 +28,15 @@ import frc.robot.subsystems.swerve.TunerConstants;
  */
 public final class Misc {
   public static final String CAN_BUS_NAME = "canBus";
+  // vision
+  public static final AprilTagCamera RIGHT_CAMERA =  new AprilTagCamera(Vision_Constants.K_RIGHT_CAMERA_NAME);
+  public static final AprilTagCamera LEFT_CAMERA =  new AprilTagCamera(Vision_Constants.K_LEFT_CAMERA_NAME);
+  public static final ObjectDetectionCamera NOTE_CAMERA = new ObjectDetectionCamera(Vision_Constants.K_NOTE_CAMERA_NAME);
+  //swerve
+  private final static double MaxSpeed =  1 * TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  public final static Telemetry m_Telemetry = new Telemetry(MaxSpeed);
+
+
 
   public static Translation2d speakerPoseBlue = new Translation2d(0.0+0.2, 5.54);
   public static Translation2d speakerPoseRed = new Translation2d(16.39-0.2, 5.54);

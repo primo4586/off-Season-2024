@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     autoContainer = new AutoContainer();
-    NetworkTabels.setField();
+    NetworkTabels.setClock(150, 0); 
 
     
 
@@ -44,7 +44,9 @@ public class Robot extends TimedRobot {
     }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    NetworkTabels.setClock(150, 0);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -59,6 +61,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    NetworkTabels.setClock(15, 1);
   }
 
   @Override
@@ -74,6 +78,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    NetworkTabels.setClock(135, 1);
   }
 
   @Override
